@@ -1,0 +1,4 @@
+<div class="card-wrapper" (click)="cardFlipped = !cardFlipped" [@cardFlip]="cardFlipped" *ngIf="cardData.image">
+    <img class="face rounded-md" [src]="imageSrc">
+    <img class="rounded-md h-full w-full" src="../../../assets/card-back.jpg">
+</div>

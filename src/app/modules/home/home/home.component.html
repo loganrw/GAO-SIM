@@ -1,0 +1,15 @@
+<span class="font-bold text-red-400">HOME</span>
+<div class="mt-4">
+    <div *ngIf="!loaded">
+        <span>LOADING CARDS. THIS WILL ONLY HAPPEN ONCE.</span>
+        <div>
+            <progress max="100" [value]="percentLoaded"></progress>
+        </div>
+    </div>
+    <button (click)="navigateToPlay()" class="text-green-400 border border-solid rounded-md px-2 hover:bg-green-200">PLAY</button>
+    <div *ngIf="loaded" class="ml-4 grid grid-cols-4 gap-2">
+        <div *ngFor="let card of cardQuery | async; trackBy: identifyList" >
+           <app-card [cardData]="card"></app-card>
+        </div>
+    </div>
+</div>

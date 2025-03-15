@@ -1,0 +1,12 @@
+.card-wrapper {
+    transform-style: preserve-3d;
+}
+
+.face {
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+.front {
+    transform: rotateY(180deg);
+}
