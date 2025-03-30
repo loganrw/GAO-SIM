@@ -1,4 +1,15 @@
-<div class="ml-10 mt-10">
-    
+<div class="relative overflow-x-hidden">
+    <img class="max-h-screen w-full" src="../../../../assets/play-area.png">
+    <div class="absolute top-0 left-0 mt-4 left-2">
+        <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon class="text-ga-blue">menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon class="!text-red-500">flag</mat-icon>
+                <span class="text-red-500">Surrender</span>
+            </button>
+        </mat-menu>
+    </div>
+    <app-main-deck class="absolute right-[-75px] bottom-[185px]"></app-main-deck>
 </div>
-

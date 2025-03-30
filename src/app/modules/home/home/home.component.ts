@@ -82,11 +82,7 @@ export class HomeComponent implements OnInit {
     this.loaded = true;
   }
 
-  identifyList(index: number, card: Card) {
-    return `${card.uuid}${card.name}`;
-  }
-
-  navigateToPlay() {
-    this.routerService.navigateToPage("play");
+  navigateToPage(page: string) {
+    this.routerService.navigateToPage(page);
   }
 }

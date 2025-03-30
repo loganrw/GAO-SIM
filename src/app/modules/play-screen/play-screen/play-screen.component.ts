@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-play-screen',
-  templateUrl: './play-screen.component.html'
+  templateUrl: './play-screen.component.html',
+  styleUrls: ['./play-screen.component.scss']
 })
 export class PlayScreenComponent {
 

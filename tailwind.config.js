@@ -13,7 +13,7 @@ module.exports = {
         'xl': '1280px',
       },
       colors: {
-
+        'ga-blue': '#2F7AB1',
       }
     },
   },

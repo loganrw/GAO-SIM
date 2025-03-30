@@ -18,6 +18,10 @@ const routes: Routes = [
         path: 'play',
         loadChildren: () => import('./modules/play-screen/play-screen.module').then((m) => m.PlayScreenModule),
       },
+      {
+        path: 'decks',
+        loadChildren: () => import('./modules/decks/decks.module').then((m) => m.DecksModule),
+      },
     ]
   },
   {
