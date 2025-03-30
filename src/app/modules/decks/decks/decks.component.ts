@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Card } from '../../../models/card';
 import { liveQuery } from 'dexie';
 import { db } from '../../../services/database/database.service';
 import { FormControl } from '@angular/forms';
+import { Deck } from '../../../models/deck';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalComponent } from '../../../components/modal/modal.component';
+
 
 interface CardCount {
   [key: string]: number
-}
-
-interface CardDisplay {
-  name: string,
-  count: number
 }
 
 @Component({
@@ -19,10 +18,13 @@ interface CardDisplay {
   styleUrl: './decks.component.scss'
 })
 export class DecksComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
 
   loaded = false;
   cardQuery = liveQuery(() => db.card.toArray());
+  decksQuery = liveQuery(() => db.decks.toArray());
   cardList: Card[] = [];
+  decksList: Deck[] = [];
   // Filtering
   searchInput = ''
   filteredCards: Card[] = [];
@@ -55,10 +57,26 @@ export class DecksComponent implements OnInit {
   countsMain: number[] = [];
   mainDeckCount: number = 0;
   materialDeckCount: number = 0;
-  // Track card elements to make sure the player only uses elements for their champion
-  activeCardElements: string[] = [];
+  // Track card elements to make sure the player only uses elements for their champion. normal element is always activated
+  activeCardElements: string[] = ["NORM"];
+  deckName: string = '';
 
   ngOnInit(): void {
+    this.loadCards();
+    this.loadDecks();
+  }
+
+  loadDecks(){
+    this.decksQuery.subscribe({
+      next: (decks) => {
+        console.log(decks)
+        this.decksList = decks;
+        this.loaded = true;
+      }
+    });
+  }
+
+  loadCards(){
     this.cardQuery.subscribe({
       next: (cards) => {
         this.cardList = cards;
@@ -160,18 +178,26 @@ export class DecksComponent implements OnInit {
         this.materialDeck.push(card);
         this.materialDeckCount++;
       }
-      this.materialDeckDisplayCount = this.countDuplicates(this.materialDeck);
-      this.materialDeckDisplay = Object.keys(this.materialDeckDisplayCount);
-      this.countsMaterial = Object.values(this.materialDeckDisplayCount);
+      this.updateMatDeckDisplay();
     } else if (!card.types.includes("CHAMPION") && !card.types.includes("REGALIA") && this.activeCardElements.includes(card.element || "NORM")) {
       if (!this.mainDeckDisplayCount[JSON.stringify(card.name)] || this.mainDeckDisplayCount[JSON.stringify(card.name)] < 4) {
         this.mainDeck.push(card);
         this.mainDeckCount++;
       }
+      this.updateMainDeckDisplay();
+    }
+  }
+
+  updateMainDeckDisplay(){
       this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
       this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
       this.countsMain = Object.values(this.mainDeckDisplayCount);
-    }
+  }
+
+  updateMatDeckDisplay(){
+      this.materialDeckDisplayCount = this.countDuplicates(this.materialDeck);
+      this.materialDeckDisplay = Object.keys(this.materialDeckDisplayCount);
+      this.countsMaterial = Object.values(this.materialDeckDisplayCount);
   }
 
   trimCardName(cardName: String) {
@@ -206,7 +232,49 @@ export class DecksComponent implements OnInit {
     return counts;
   }
 
-  saveDeck() {
+  async saveDeck() {
+    this.isCreatingDeck = false;
+    let deck: Deck = {
+        name: this.deckName,
+        main: this.mainDeck,
+        material: this.materialDeck
+      };
+    console.log("Starting deck save: ", deck)
+    await db.decks.add(deck);
+    console.log("deck saved")
+    this.loadDecks();
+  }
 
+  removeCard(cardName: string, deck: string){
+    if(deck === 'main'){
+      let index;
+      let foundCard = this.mainDeck.find(card => card.name.toLowerCase() == this.trimCardName(cardName.toLowerCase()));
+      if(foundCard){ 
+        index = this.mainDeck.indexOf(foundCard, 0);
+        this.mainDeck.splice(index, 1);
+        this.mainDeckCount--;
+        this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
+        if(foundCard && !this.mainDeckDisplayCount[foundCard.name]) this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
+        this.countsMain = Object.values(this.mainDeckDisplayCount);
+      }
+    } else if (deck === 'material'){
+      let foundCard = this.materialDeck.find(card => card.name.toLowerCase() == this.trimCardName(cardName.toLowerCase()));
+      this.materialDeck = this.materialDeck.filter(card => card !== foundCard);
+      this.materialDeckCount--;
+      this.updateMatDeckDisplay();
+    }
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
+    let dialogRef = this.dialog.open(ModalComponent, {
+      width: '400px',
+      height: '200px',
+      enterAnimationDuration,
+      exitAnimationDuration
+    });
+    dialogRef.afterClosed().subscribe(newDeckName => {
+      this.deckName = newDeckName;
+      this.saveDeck();
+    });
   }
 }
