@@ -4,6 +4,9 @@ module.exports = {
     "./src/**/*.{html,sass,ts}",
     "./src/app/**",
   ],
+  variants: {
+    backgroundColor: ({ after }) => after(['disabled'])
+  },
   theme: {
     extend: {
       screens: {

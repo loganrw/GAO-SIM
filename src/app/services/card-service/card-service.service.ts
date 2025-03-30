@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, switchMap } from 'rxjs';
 import { CardResponse } from '../../models/card-response';
-import { Card } from '../../models/card';
 
 @Injectable({
   providedIn: 'root'

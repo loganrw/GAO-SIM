@@ -5,7 +5,9 @@ import { db } from '../../../services/database/database.service';
 import { FormControl } from '@angular/forms';
 import { Deck } from '../../../models/deck';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from '../../../components/modal/modal.component';
+import { DeckModalComponent } from '../../../components/deck-modal/deck.modal.component';
+import { ImportModalComponent } from '../../../components/import-modal/import.modal.component';
+import { ImportService } from '../../../services/card-import/card.import';
 
 
 interface CardCount {
@@ -60,23 +62,25 @@ export class DecksComponent implements OnInit {
   // Track card elements to make sure the player only uses elements for their champion. normal element is always activated
   activeCardElements: string[] = ["NORM"];
   deckName: string = '';
+  // Deck editing
+  isEditingDeck: boolean = false;
+  originalDeck: Deck = {} as Deck;
 
-  ngOnInit(): void {
+  constructor(private importService: ImportService) { }
+
+  async ngOnInit() {
     this.loadCards();
     this.loadDecks();
+    this.importService.loadCards();
   }
 
-  loadDecks(){
-    this.decksQuery.subscribe({
-      next: (decks) => {
-        console.log(decks)
-        this.decksList = decks;
-        this.loaded = true;
-      }
+  loadDecks() {
+    this.decksQuery.subscribe(decks => {
+      this.decksList = decks;
     });
   }
 
-  loadCards(){
+  loadCards() {
     this.cardQuery.subscribe({
       next: (cards) => {
         this.cardList = cards;
@@ -168,6 +172,7 @@ export class DecksComponent implements OnInit {
   }
 
   createDeck() {
+    this.resetDeckChoices();
     this.isCreatingDeck = true;
   }
 
@@ -188,16 +193,16 @@ export class DecksComponent implements OnInit {
     }
   }
 
-  updateMainDeckDisplay(){
-      this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
-      this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
-      this.countsMain = Object.values(this.mainDeckDisplayCount);
+  updateMainDeckDisplay() {
+    this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
+    this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
+    this.countsMain = Object.values(this.mainDeckDisplayCount);
   }
 
-  updateMatDeckDisplay(){
-      this.materialDeckDisplayCount = this.countDuplicates(this.materialDeck);
-      this.materialDeckDisplay = Object.keys(this.materialDeckDisplayCount);
-      this.countsMaterial = Object.values(this.materialDeckDisplayCount);
+  updateMatDeckDisplay() {
+    this.materialDeckDisplayCount = this.countDuplicates(this.materialDeck);
+    this.materialDeckDisplay = Object.keys(this.materialDeckDisplayCount);
+    this.countsMaterial = Object.values(this.materialDeckDisplayCount);
   }
 
   trimCardName(cardName: String) {
@@ -205,8 +210,18 @@ export class DecksComponent implements OnInit {
   }
 
   cancelCreate() {
-    // reset the deck info
-    this.isCreatingDeck = false;
+    if (this.isEditingDeck) {
+      this.mainDeck = this.originalDeck.main;
+      this.materialDeck = this.originalDeck.material;
+      this.saveDeck();
+    } else {
+      // reset the deck info
+      this.isCreatingDeck = false;
+      this.resetDeckChoices();
+    }
+  }
+
+  resetDeckChoices() {
     this.mainDeck = [];
     this.materialDeck = [];
     this.countsMain = [];
@@ -235,29 +250,56 @@ export class DecksComponent implements OnInit {
   async saveDeck() {
     this.isCreatingDeck = false;
     let deck: Deck = {
-        name: this.deckName,
-        main: this.mainDeck,
-        material: this.materialDeck
-      };
-    console.log("Starting deck save: ", deck)
-    await db.decks.add(deck);
-    console.log("deck saved")
+      name: this.deckName,
+      main: this.mainDeck,
+      material: this.materialDeck
+    };
+    if (this.isEditingDeck) {
+      await db.decks.get({ name: this.deckName }).then(async (dbDeck: any) => {
+        if (deck) await db.decks.update(dbDeck.id, {
+          main: this.mainDeck,
+          material: this.materialDeck
+        });
+        this.isEditingDeck = false;
+        this.loadDecks();
+      });
+    } else {
+      await db.decks.add(deck);
+    }
     this.loadDecks();
   }
 
-  removeCard(cardName: string, deck: string){
-    if(deck === 'main'){
+  async deleteDeck(deck: Deck) {
+    await db.decks.where("name").anyOf(deck.name).delete();
+    this.loadDecks();
+  }
+
+  editDeck(deck: Deck) {
+    this.originalDeck = structuredClone(deck);
+    this.mainDeck = deck.main;
+    this.materialDeck = deck.material;
+    this.deckName = deck.name;
+    this.mainDeckCount = this.mainDeck.length;
+    this.materialDeckCount = this.materialDeck.length;
+    this.updateMainDeckDisplay();
+    this.updateMatDeckDisplay();
+    this.isCreatingDeck = true;
+    this.isEditingDeck = true;
+  }
+
+  removeCard(cardName: string, deck: string) {
+    if (deck === 'main') {
       let index;
       let foundCard = this.mainDeck.find(card => card.name.toLowerCase() == this.trimCardName(cardName.toLowerCase()));
-      if(foundCard){ 
+      if (foundCard) {
         index = this.mainDeck.indexOf(foundCard, 0);
         this.mainDeck.splice(index, 1);
         this.mainDeckCount--;
         this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
-        if(foundCard && !this.mainDeckDisplayCount[foundCard.name]) this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
+        if (foundCard && !this.mainDeckDisplayCount[foundCard.name]) this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
         this.countsMain = Object.values(this.mainDeckDisplayCount);
       }
-    } else if (deck === 'material'){
+    } else if (deck === 'material') {
       let foundCard = this.materialDeck.find(card => card.name.toLowerCase() == this.trimCardName(cardName.toLowerCase()));
       this.materialDeck = this.materialDeck.filter(card => card !== foundCard);
       this.materialDeckCount--;
@@ -266,15 +308,57 @@ export class DecksComponent implements OnInit {
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string) {
-    let dialogRef = this.dialog.open(ModalComponent, {
+    if (this.isEditingDeck) {
+      this.saveDeck();
+      return;
+    }
+    let dialogRef = this.dialog.open(DeckModalComponent, {
       width: '400px',
       height: '200px',
       enterAnimationDuration,
-      exitAnimationDuration
+      exitAnimationDuration,
+      data: this.decksList
     });
     dialogRef.afterClosed().subscribe(newDeckName => {
-      this.deckName = newDeckName;
-      this.saveDeck();
+      if (newDeckName && newDeckName !== '') {
+        this.deckName = newDeckName;
+        this.saveDeck();
+      }
+    });
+  }
+
+  importDeck(enterAnimationDuration: string, exitAnimationDuration: string) {
+    let importedDeck: Deck = {
+      name: 'TEST',
+      main: [],
+      material: [],
+    };
+    let dialogRef = this.dialog.open(ImportModalComponent, {
+      width: '500px',
+      height: '500px',
+      enterAnimationDuration,
+      exitAnimationDuration
+    });
+    dialogRef.afterClosed().subscribe(deckList => {
+      if (deckList && deckList !== '') {
+        let result = this.importService.parseInput(deckList)
+        let cardNames = Object.keys(result);
+        let cardCounts = Object.values(result);
+        cardCounts.forEach((count, idx) => {
+          for (let i = 0; i < Number(count); i++) {
+            let card = this.importService.getCard(cardNames[idx]);
+            if (card.cost_memory !== null) {
+              importedDeck.material.push(card)
+            } else {
+              importedDeck.main.push(card);
+            }
+          }
+        });
+        this.materialDeck = importedDeck.material;
+        this.mainDeck = importedDeck.main;
+        this.deckName = importedDeck.material[0].name;
+        this.saveDeck();
+      }
     });
   }
 }
