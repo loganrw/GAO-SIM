@@ -16,8 +16,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ],
 })
 export class CardComponent implements OnInit {
-  @Input()
-  cardData!: Card;
+  @Input() cardData: Card;
 
   cardFlipped = false;
   imageSrc = ''
@@ -28,6 +27,7 @@ export class CardComponent implements OnInit {
 
 
   getCardURL(blob: Blob) {
-    return URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
+    return url;
   }
 }

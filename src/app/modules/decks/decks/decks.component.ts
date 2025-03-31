@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Card } from '../../../models/card';
 import { liveQuery } from 'dexie';
 import { db } from '../../../services/database/database.service';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeckModalComponent } from '../../../components/deck-modal/deck.modal.component';
 import { ImportModalComponent } from '../../../components/import-modal/import.modal.component';
 import { ImportService } from '../../../services/card-import/card.import';
+import { MatSidenav } from '@angular/material/sidenav';
 
 
 interface CardCount {
@@ -38,7 +39,7 @@ export class DecksComponent implements OnInit {
   selectedTypes: string[] = [];
   selectedClass: string[] = [];
   selectedCost: string[] = [];
-  selectedSpeed: string[] = [];
+  selectedSpeed: boolean[] = [];
   selectedElements: string[] = [];
   cardTypes: string[] = ['champion', 'ally', 'action', 'attack', 'item', 'weapon', "domain", "phantasia", "regalia"];
   cardCosts: string[] = ["12", "10", "9", "8", "7", "3", "2", "1", "0"];
@@ -65,6 +66,13 @@ export class DecksComponent implements OnInit {
   // Deck editing
   isEditingDeck: boolean = false;
   originalDeck: Deck = {} as Deck;
+  // Side drawer for card display when clicked
+  isCardOpen = true;
+  @ViewChild('drawer') drawer: MatSidenav;
+  selectedCard: Card;
+
+
+
 
   constructor(private importService: ImportService) { }
 
@@ -360,5 +368,14 @@ export class DecksComponent implements OnInit {
         this.saveDeck();
       }
     });
+  }
+
+  showCardInfo(card: Card) {
+    this.selectedCard = card;
+    this.drawer.toggle();
+  }
+
+  getCardURL(blob: Blob) {
+    return URL.createObjectURL(blob);
   }
 }

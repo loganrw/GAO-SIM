@@ -21,7 +21,7 @@ export interface Card {
     life: number
     name: string
     power: number
-    speed: string
+    speed: boolean
     subtypes: string[]
     types: string[]
     uuid: string

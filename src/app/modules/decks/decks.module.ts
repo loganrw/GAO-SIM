@@ -10,7 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -22,6 +23,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
     DecksRoutingModule,
     FormsModule,
+    MatSidenavModule,
+    MatTooltipModule,
     MatProgressSpinnerModule,
     MatIconModule,
     ReactiveFormsModule,
