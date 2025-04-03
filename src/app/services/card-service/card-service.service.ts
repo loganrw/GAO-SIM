@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CardResponse } from '../../models/card-response';
 
 @Injectable({

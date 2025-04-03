@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-main-deck',
   templateUrl: './main-deck.component.html'
 })
-export class MainDeckComponent {
-
-}
+export class MainDeckComponent { }

@@ -22,6 +22,14 @@ const routes: Routes = [
         path: 'decks',
         loadChildren: () => import('./modules/decks/decks.module').then((m) => m.DecksModule),
       },
+      {
+        path: 'lobby',
+        loadChildren: () => import('./modules/lobby/lobby.module').then((m) => m.LobbyModule),
+      },
+      {
+        path: 'options',
+        loadChildren: () => import('./modules/options/options.module').then((m) => m.OptionsModule),
+      }
     ]
   },
   {

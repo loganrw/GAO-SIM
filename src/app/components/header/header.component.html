@@ -1,0 +1,26 @@
+<div class="top-0 mt-2 ml-4 flex flex-row">
+    <div class="left-0">
+        <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon class="text-emerald-700">menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button *ngIf="checkLinkValue('home')" (click)="navigateToPage('')" mat-menu-item>
+                <mat-icon class="!text-emerald-700">house</mat-icon>
+                <span class="text-emerald-700">Home</span>
+            </button>
+            <button *ngIf="checkLinkValue('decks')" (click)="navigateToPage('decks')" mat-menu-item>
+                <mat-icon class="!text-emerald-700">style</mat-icon>
+                <span class="text-emerald-700">Decks</span>
+            </button>
+            <button *ngIf="checkLinkValue('play')" (click)="navigateToPage('lobby')" mat-menu-item>
+                <mat-icon class="!text-emerald-700">gamepad</mat-icon>
+                <span class="text-emerald-700">Play</span>
+            </button>
+            <button *ngIf="checkLinkValue('options')" (click)="navigateToPage('options')" mat-menu-item>
+                <mat-icon class="!text-emerald-700">settings</mat-icon>
+                <span class="text-emerald-700">Options</span>
+            </button>
+        </mat-menu>
+    </div>
+    <img (click)="navigateToPage('')" src="./assets/logo.jpg" class="w-22 h-12 rounded-lg ml-[800px] border-2 border-emerald-700 shadow-lg">
+</div>

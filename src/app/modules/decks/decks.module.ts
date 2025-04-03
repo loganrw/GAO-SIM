@@ -12,6 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { HeaderModule } from '../../components/header/header.module';
 
 
 @NgModule({
@@ -21,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   imports: [
     CommonModule,
+    HeaderModule,
     DecksRoutingModule,
     FormsModule,
     MatSidenavModule,
@@ -30,7 +34,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     MatSelectModule,
     MatExpansionModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatButtonModule,
+    MatMenuModule
   ]
 })
 export class DecksModule { }

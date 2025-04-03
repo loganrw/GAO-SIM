@@ -17,6 +17,7 @@ module.exports = {
       },
       colors: {
         'ga-blue': '#2F7AB1',
+        'ga-blue-light': '#368ecf'
       }
     },
   },

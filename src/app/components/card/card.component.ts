@@ -27,7 +27,6 @@ export class CardComponent implements OnInit {
 
 
   getCardURL(blob: Blob) {
-    let url = URL.createObjectURL(blob);
-    return url;
+    return URL.createObjectURL(blob);
   }
 }

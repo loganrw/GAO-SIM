@@ -1,0 +1,11 @@
+<app-header [headerLinks]="headerLinks"></app-header>
+<div class="flex flex-col ml-[23%] mt-[10%] w-1/2 h-1/2 items-center">
+    <div class="rounded-md border-2 border-emerald-800">
+        <div class="flex flex-col items-center m-40">
+            <span class="mt-4 text-lg text-emerald-700 underline">Player Name</span>
+            <span *ngIf="!validInput" class="mt-2 text-sm text-red-500">Your name may not include vulgar or offensive language</span>
+            <input class="mt-2 rounded-md border border-emerald-800 px-2" [(ngModel)]="newPlayerName" maxlength="12" type="text" (keypress)="omitSpecialChar($event)" [placeholder]="playerName">
+            <button class="rounded-md bg-emerald-700 text-white mt-2 px-2 py-4 hover:bg-emerald-600" (click)="changeName()">Change Name</button>
+        </div>
+    </div>
+</div>

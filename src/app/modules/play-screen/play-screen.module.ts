@@ -8,16 +8,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MainDeckComponent } from '../../components/main-deck/main-deck.component';
+import { MaterialDeckComponent } from '../../components/material-deck/material-deck.component';
+import { HandComponent } from '../../components/hand/hand.component';
+import { GraveyardComponent } from '../../components/graveyard/graveyard.component';
+import { BanishZoneComponent } from '../../components/banish-zone/banish-zone.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 @NgModule({
   declarations: [
     PlayScreenComponent,
-    MainDeckComponent
+    MainDeckComponent,
+    MaterialDeckComponent,
+    HandComponent,
+    GraveyardComponent,
+    BanishZoneComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
+    MatSidenavModule,
     PlayScreenRoutingModule,
     MatIconModule,
     MatMenuModule,

@@ -1,0 +1,41 @@
+<div class="max-h-screen overflow-hidden">
+    <app-header [headerLinks]="headerLinks"></app-header>
+    <div class="flex flex-row">
+        <div
+            class="flex flex-col left-0 h-[50%] border-2 border-solid border-emerald-700 rounded-md w-[15%] ml-8 items-center">
+            <span class="text-emerald-700 text-lg mt-2 underline">Selected Deck</span>
+            <div class="flex flex-col items-left text-center">
+                <mat-form-field>
+                    <mat-select [(ngModel)]="selectedDeck" [formControl]="deckSelect">
+                        @for (deck of decks; track deck) {
+                        <mat-option [value]="deck" class="text-emerald-700">{{deck.name}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex flex-col items-center border-2 border-solid border-emerald-700 rounded-md ml-4 w-[60%] mr-4">
+            <div class="flex flex-row items-center">
+                <span class="text-emerald-700 text-lg mt-2 underline">Available Rooms</span>
+                <mat-icon class="ml-4 text-white rounded-full bg-emerald-700 mt-2" matTooltip="Refresh rooms"
+                    (click)="refreshRooms()">refresh</mat-icon>
+            </div>
+            <span *ngFor="let room of roomList"
+                class="rounded-md bg-emerald-700 text-white p-4 mt-1 mb-1 w-1/2 hover:bg-emerald-600 border-gray-700 border-2 text-center"
+                matTooltip="Join room">{{room.name}}</span>
+        </div>
+    </div>
+    <div
+        class="flex flex-col left-0 h-[50%] border-2 border-solid border-emerald-700 rounded-md w-[15%] ml-8 items-center mt-4">
+        <span class="text-emerald-700 text-lg mt-2 underline">Join Room</span>
+        <div class="flex flex-col items-center mb-2">
+            <span class="text-emerald-700 mt-2">Private</span>
+            <input class="px-2 rounded-md border border-emerald-700 mt-2" placeholder="name">
+            <input class="px-2 rounded-md border border-emerald-700 mt-2" placeholder="password">
+        </div>
+        <div class="flex flex-col items-center mb-2">
+            <span class="text-emerald-700 mt-2">Random</span>
+            <button class="rounded-md bg-emerald-700 hover:bg-emerald-600 mt-2 text-white p-4">Join Random</button>
+        </div>
+    </div>
+</div>

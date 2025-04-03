@@ -70,6 +70,8 @@ export class DecksComponent implements OnInit {
   isCardOpen = true;
   @ViewChild('drawer') drawer: MatSidenav;
   selectedCard: Card;
+  // header links
+  headerLinks = ['home', 'play', 'options'];
 
 
 
@@ -349,7 +351,7 @@ export class DecksComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(deckList => {
       if (deckList && deckList !== '') {
-        let result = this.importService.parseInput(deckList)
+        let result = this.importService.parseInput(deckList);
         let cardNames = Object.keys(result);
         let cardCounts = Object.values(result);
         cardCounts.forEach((count, idx) => {

@@ -22,12 +22,13 @@
             <div class="mt-2 flex flex-row bg-slate-100 rounded-md p-2 w-full justify-center border-2 shadow-md border-solid border-emerald-500">
                 <span class="text-emerald-700 mr-2">Card Types: </span>
                 <div *ngFor="let type of selectedCard.types">
-                   <span class="text-emerald-700" *ngIf="type">{{type}}</span>
+                   <span class="text-emerald-700" *ngIf="type">{{type}}&nbsp;&nbsp;</span>
                 </div>
             </div>
         </div>
     </mat-drawer>
     <mat-drawer-content>
+        <app-header [headerLinks]="headerLinks"></app-header>
         <div class="w-full flex flex-col">
             <div *ngIf="isCreatingDeck" class="mt-2 rounded-full bg-red-700 text-white text-center px-8 self-center">
                 Creating New Deck!</div>

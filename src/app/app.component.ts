@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NameGenService } from './services/name-gen/name-generator';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent {
   title = 'Grand Archive Online Sim';
+
+  constructor(private nameGen: NameGenService) { }
+
+  ngOnInit() {
+    if (!localStorage.getItem('playerName')) localStorage.setItem('playerName', this.nameGen.generateName());
+  }
 }
 
 
