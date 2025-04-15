@@ -372,8 +372,9 @@ export class DecksComponent implements OnInit {
     });
   }
 
-  showCardInfo(card: Card) {
+  showCardInfo(card: Card, altImage: Blob | null) {
     this.selectedCard = card;
+    if (altImage) this.selectedCard.image = altImage;
     this.drawer.toggle();
   }
 

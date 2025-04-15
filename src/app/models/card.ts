@@ -7,7 +7,8 @@ export interface Card {
         {
             card_id: string
             image: string
-            uuid: string
+            uuid: string,
+            flavor: string,
         }
     ]
     effect: string
@@ -16,6 +17,7 @@ export interface Card {
     element: string
     flavor: string
     image: Blob
+    altArts: Blob[]
     legality: string
     level: number
     life: number

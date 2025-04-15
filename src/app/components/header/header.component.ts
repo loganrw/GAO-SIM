@@ -9,6 +9,7 @@ import { RoutingService } from '../../services/routing/routing.service';
 export class HeaderComponent {
 
   @Input() headerLinks: string[] = [];
+  @Input() colorTheme: string;
 
   constructor(private routerService: RoutingService) { }
 

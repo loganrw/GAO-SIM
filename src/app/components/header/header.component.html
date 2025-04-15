@@ -1,7 +1,7 @@
 <div class="top-0 mt-2 ml-4 flex flex-row">
     <div class="left-0">
         <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon class="text-emerald-700">menu</mat-icon>
+            <mat-icon [ngClass]="colorTheme === 'white' ? 'text-white' : 'text-emerald-700'">menu</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
             <button *ngIf="checkLinkValue('home')" (click)="navigateToPage('')" mat-menu-item>

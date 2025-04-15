@@ -6,12 +6,17 @@ import { Card } from '../../models/card';
   templateUrl: './card-display.component.html'
 })
 export class CardDisplayComponent implements OnInit {
-  @Input()
-  cardData!: Card;
+  @Input() cardData!: Card;
+  @Input() altImage: Blob;
   imageSrc = ''
 
   ngOnInit(): void {
-    if (this.cardData.image) this.imageSrc = this.getCardURL(this.cardData.image)
+    if (this.altImage) {
+      this.imageSrc = this.getCardURL(this.altImage);
+    }
+    else if (this.cardData.image) {
+      this.imageSrc = this.getCardURL(this.cardData.image);
+    }
   }
 
 

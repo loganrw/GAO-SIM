@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
       element: card.element,
       flavor: card.flavor,
       image: card.image,
+      altArts: card.altArts,
       legality: card.legality,
       level: card.level,
       life: card.life,
@@ -59,10 +60,19 @@ export class HomeComponent implements OnInit {
     this.cardService.getCards(page).subscribe((res: CardResponse) => {
       this.percentLoaded = (res.page / res.total_pages) * 100;
       res.data.forEach(card => {
-        this.cardService.getCardImages(card.editions[0].image).subscribe(data => {
-          card.image = data;
+        if (card.editions && card.editions.length > 1) {
+          card.altArts = [];
+          card.editions.forEach(edition => {
+            this.cardService.getCardImages(edition.image).subscribe(data => {
+              card.altArts.push(data);
+            })
+          })
+        } else {
+          this.cardService.getCardImages(card.editions[0].image).subscribe(data => {
+            card.image = data;
+            card.altArts = [];
+          });
         }
-        );
         this.cards.push(card);
       }
       );

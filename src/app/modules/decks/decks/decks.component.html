@@ -1,28 +1,38 @@
 <mat-drawer-container hasBackdrop>
     <mat-drawer #drawer mode="over" position="end" class="bg-[url('./assets/vines.png')] bg-no-repeat">
         <div *ngIf="selectedCard" class="mt-2 p-2 flex flex-col items-center w-full">
-            <div class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+            <div
+                class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
                 <span class="font-bold text-lg text-emerald-700">{{selectedCard.name}}</span>
                 <span class="text-emerald-700 mt-2 mb-2">Element: {{selectedCard.element}}</span>
-                <mat-icon *ngIf="isCreatingDeck" class="absolute mr-8 mt-5 bg-emerald-700 text-white rounded-full right-0" (click)="addToDeck(selectedCard)" matTooltip="Add to deck">add</mat-icon>
+                <mat-icon *ngIf="isCreatingDeck"
+                    class="absolute mr-8 mt-5 bg-emerald-700 text-white rounded-full right-0"
+                    (click)="addToDeck(selectedCard)" matTooltip="Add to deck">add</mat-icon>
             </div>
             <img [src]="getCardURL(selectedCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
-            <div class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
-                <span class="text-emerald-700">Memory Cost: {{selectedCard.cost_memory ? selectedCard.cost_memory : 0}}</span>
-                <span class="text-emerald-700">Reserve Cost: {{selectedCard.cost_reserve ? selectedCard.cost_reserve : 0}}</span>
+            <div
+                class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+                <span class="text-emerald-700">Memory Cost: {{selectedCard.cost_memory ? selectedCard.cost_memory :
+                    0}}</span>
+                <span class="text-emerald-700">Reserve Cost: {{selectedCard.cost_reserve ? selectedCard.cost_reserve :
+                    0}}</span>
                 <span class="text-emerald-700">Level: {{selectedCard.level ? selectedCard.level : 'None'}}</span>
                 <span class="text-emerald-700">Life: {{selectedCard.life ? selectedCard.life : 'None'}}</span>
                 <span class="text-emerald-700">Power: {{selectedCard.power ? selectedCard.power : 'None'}}</span>
-                <span class="text-emerald-700">Speed: {{selectedCard.speed === null ? 'None' : selectedCard.speed == true ? 'Fast' : 'Slow'}}</span>
+                <span class="text-emerald-700">Speed: {{selectedCard.speed === null ? 'None' : selectedCard.speed ==
+                    true ? 'Fast' : 'Slow'}}</span>
             </div>
-            <div class="flex flex-col mt-2 bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+            <div
+                class="flex flex-col mt-2 bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
                 <span class="text-emerald-700">Effect:</span>
-                <div class="text-emerald-700 p-2 border border-solid border-emerald-500" [innerHtml]="selectedCard.effect_raw"></div>
+                <div class="text-emerald-700 p-2 border border-solid border-emerald-500"
+                    [innerHtml]="selectedCard.effect_raw"></div>
             </div>
-            <div class="mt-2 flex flex-row bg-slate-100 rounded-md p-2 w-full justify-center border-2 shadow-md border-solid border-emerald-500">
+            <div
+                class="mt-2 flex flex-row bg-slate-100 rounded-md p-2 w-full justify-center border-2 shadow-md border-solid border-emerald-500">
                 <span class="text-emerald-700 mr-2">Card Types: </span>
                 <div *ngFor="let type of selectedCard.types">
-                   <span class="text-emerald-700" *ngIf="type">{{type}}&nbsp;&nbsp;</span>
+                    <span class="text-emerald-700" *ngIf="type">{{type}}&nbsp;&nbsp;</span>
                 </div>
             </div>
         </div>
@@ -175,10 +185,21 @@
                         <div class="flex m-auto overflow-scroll h-full top-0">
                             <div class="m-4 grid grid-cols-8 gap-y-8 gap-x-2">
                                 <div *ngFor="let card of filteredCards" class="flex flex-col content-center">
-                                    <app-card-display [cardData]="card" (click)="showCardInfo(card)" class="hover:cursor-pointer"></app-card-display>
+                                    <app-card-display *ngIf="!(card.editions.length > 1); else altCard"
+                                        [cardData]="card" (click)="showCardInfo(card, null)"
+                                        class="hover:cursor-pointer"></app-card-display>
                                     <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
                                         class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
                                         Add to Deck</button>
+                                    <ng-template #altCard>
+                                        
+                                        <app-card-display
+                                            [cardData]="card" (click)="showCardInfo(card, null)"
+                                            class="hover:cursor-pointer"></app-card-display>
+                                        <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
+                                            class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
+                                            Add to Deck</button>
+                                    </ng-template>
                                 </div>
                             </div>
                         </div>
