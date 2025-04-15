@@ -13,7 +13,7 @@ import { FormControl } from '@angular/forms';
   styleUrl: './lobby.component.scss'
 })
 export class LobbyComponent {
-  client = new Client('ws://localhost:2567');
+  client = new Client('ws://155-138-239-22.colyseus.dev:2567');
   roomList: Room[] = [];
   decksQuery = liveQuery(() => db.decks.toArray());
   decks: Deck[] = [];
