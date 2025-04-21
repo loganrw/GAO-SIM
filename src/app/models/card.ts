@@ -6,8 +6,8 @@ export interface Card {
     editions: [
         {
             card_id: string
-            image: string
             uuid: string,
+            image: string,
             flavor: string,
         }
     ]
@@ -16,8 +16,8 @@ export interface Card {
     effect_raw: string
     element: string
     flavor: string
+    image_link: string,
     image: Blob
-    altArts: Blob[]
     legality: string
     level: number
     life: number

@@ -71,7 +71,7 @@ export class DecksComponent implements OnInit {
   @ViewChild('drawer') drawer: MatSidenav;
   selectedCard: Card;
   // header links
-  headerLinks = ['home', 'play', 'options'];
+  headerLinks = ['home', 'play', 'options', 'ai'];
 
 
 

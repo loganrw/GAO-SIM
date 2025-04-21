@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { HeaderModule } from '../../components/header/header.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { HeaderModule } from '../../components/header/header.module';
     DecksRoutingModule,
     FormsModule,
     MatSidenavModule,
+    MatPaginatorModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatIconModule,

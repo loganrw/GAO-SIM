@@ -7,9 +7,9 @@
         <div
             class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center">
             <span class="text-white text-lg mt-2 underline">Selected Deck</span>
-            <div class="flex flex-col items-left text-center">
+            <div class="flex flex-col items-left text-center w-[95%]">
                 <mat-form-field>
-                    <mat-select [(ngModel)]="selectedDeck" [formControl]="deckSelect">
+                    <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck" [formControl]="deckSelect">
                         @for (deck of decks; track deck) {
                         <mat-option [value]="deck" class="text-white">{{deck.name}}</mat-option>
                         }
@@ -40,13 +40,13 @@
     <div
         class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center mt-4">
         <span class="text-white text-lg mt-2 underline">Create Room</span>
-        <div class="flex flex-col items-center mb-2">
+        <div class="flex flex-col items-center mb-2 ">
             <span *ngIf="!validRoomName" class="text-red-500 mt-1 mb-1 text-sm">Room name is not valid or already
                 exists</span>
-            <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm">Room password is not valid</span>
-            <input class="px-2 rounded-md border border-white mt-2" [(ngModel)]="roomName" placeholder="room name">
-            <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2" [(ngModel)]="roomPass"
-                placeholder="Room password">
+            <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm overflow-none">Room password is not valid</span>
+            <input class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName" placeholder="room name">
+            <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomPass"
+                placeholder="room password">
             <div class="flex flex-row mt-1 mb-1 items-center">
                 <span class="text-white">Private room?</span>
                 <input type="checkbox" [(ngModel)]="isPrivate"
@@ -61,13 +61,22 @@
         <span class="text-white text-lg mt-2 underline">Join Room</span>
         <div class="flex flex-col items-center mb-2">
             <span class="text-white mt-2">Private</span>
-            <input class="px-2 rounded-md border border-white mt-2" [(ngModel)]="privateRoomName" placeholder="name">
-            <input class="px-2 rounded-md border border-white mt-2" [(ngModel)]="joinPass" placeholder="password">
-            <button (click)="joinPrivateRoom()" class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Join</button>
+            <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="privateRoomName" placeholder="name">
+            <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="joinPass" placeholder="password">
+            <button (click)="joinPrivateRoom()"
+                class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Join</button>
         </div>
         <div class="flex flex-col items-center mb-2">
             <span class="text-white mt-2">Random</span>
             <button class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 p-4">Join Random</button>
+        </div>
+    </div>
+    <div
+        class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center mt-4">
+        <span class="text-white text-lg mt-2 underline">Play AI</span>
+        <div class="flex flex-col items-center mb-2">
+            <button (click)="joinAiGame()"
+                class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Play</button>
         </div>
     </div>
 </div>

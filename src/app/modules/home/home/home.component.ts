@@ -1,10 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { RoutingService } from '../../../services/routing/routing.service';
 import { Card } from '../../../models/card';
 import { CardService } from '../../../services/card-service/card-service.service';
 import { CardResponse } from '../../../models/card-response';
 import { db } from '../../../services/database/database.service';
 import { liveQuery } from 'dexie';
+import { forkJoin, mergeMap, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,10 @@ import { liveQuery } from 'dexie';
 })
 export class HomeComponent implements OnInit {
   cards: Card[] = [];
+  imageLinks: string[] = [];
   pageNumber = 1;
   percentLoaded = 0;
+  loadedCount = 0;
   loaded = false;
   cardQuery = liveQuery(() => db.card.toArray());
 
@@ -43,7 +46,7 @@ export class HomeComponent implements OnInit {
       element: card.element,
       flavor: card.flavor,
       image: card.image,
-      altArts: card.altArts,
+      image_link: card.image_link,
       legality: card.legality,
       level: card.level,
       life: card.life,
@@ -60,39 +63,25 @@ export class HomeComponent implements OnInit {
     this.cardService.getCards(page).subscribe((res: CardResponse) => {
       this.percentLoaded = (res.page / res.total_pages) * 100;
       res.data.forEach(card => {
-        if (card.editions && card.editions.length > 1) {
-          card.altArts = [];
-          card.editions.forEach(edition => {
-            this.cardService.getCardImages(edition.image).subscribe(data => {
-              card.altArts.push(data);
-            })
-          })
-        } else {
-          this.cardService.getCardImages(card.editions[0].image).subscribe(data => {
-            card.image = data;
-            card.altArts = [];
-          });
-        }
-        this.cards.push(card);
+        card.editions.forEach(async (ed) => {
+          const result = await this.cardService.getCardImages(ed.image).toPromise();
+          card.image = result ? result : {} as Blob;
+          card.flavor = ed.flavor;
+          this.addNewCard(card);
+        });
       }
       );
       if (res.has_more) {
         page++;
         this.getCards(page);
       } else {
-        this.addCardsToDb();
+        this.loaded = true;
       }
     });
-  }
-
-  addCardsToDb() {
-    this.cards.forEach(card => {
-      this.addNewCard(card);
-    });
-    this.loaded = true;
   }
 
   navigateToPage(page: string) {
     this.routerService.navigateToPage(page);
   }
 }
+

@@ -1,6 +1,6 @@
 <mat-drawer-container hasBackdrop>
     <mat-drawer #drawer mode="over" position="end" class="bg-[url('./assets/vines.png')] bg-no-repeat">
-        <div *ngIf="currentCard" class="mt-2 p-2 flex flex-col items-center w-full">
+        <div *ngIf="currentCard && loaded" class="mt-2 p-2 flex flex-col items-center w-full">
             <div
                 class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
                 <span class="font-bold text-lg text-emerald-700">{{currentCard.name}}</span>
@@ -37,21 +37,21 @@
         </div>
     </mat-drawer>
     <mat-drawer-content>
-        <div class="relative overflow-x-hidden">
-            <img class="max-h-screen w-full" src="../../../../assets/play-area.png">
+        <div class="relative overflow-x-hidden overflow-y-hidden">
+            <img class="max-h-screen min-h-screen w-full" src="../../../../assets/play-area.png">
             <div class="absolute top-0 left-0 mt-4 left-2">
                 <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
                     <mat-icon class="text-ga-blue">menu</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item>
+                    <button (click)="navigateToPage('/')" mat-menu-item>
                         <mat-icon class="!text-red-500">flag</mat-icon>
                         <span class="text-red-500">Surrender</span>
                     </button>
                 </mat-menu>
             </div>
-            <app-main-deck class="absolute right-[-76px] bottom-[185px]"></app-main-deck>
-            <app-material-deck class="absolute left-[237px] bottom-[185px]"></app-material-deck>
+            <app-main-deck class="absolute xl:bottom-[165px] right-[-76px] bottom-[185px]"></app-main-deck>
+            <app-material-deck class="absolute xl:left-[230px] xl:bottom-[160px] left-[237px] bottom-[185px]"></app-material-deck>
             <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand" (currentCard)="setCurrentCard($event)"
                [ngClass]="hoverCards ? 'bottom-0' : 'bottom-[-275px]'" class="left-[8%] fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
         </div>

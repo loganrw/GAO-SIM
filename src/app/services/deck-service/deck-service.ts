@@ -7,11 +7,4 @@ import { Card } from '../../models/card';
 })
 export class DeckService {
 
-    drawCard(deck: Card[], count: number) {
-        let cardsReturn: Card[] = [];
-        for (let i = 0; i < count; i++) {
-            cardsReturn.push(deck[i]);
-        }
-        return cardsReturn;
-    }
 }

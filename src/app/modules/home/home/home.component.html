@@ -1,14 +1,17 @@
 <div class="flex flex-row justify-center">
-    <img src="../../../../assets/logo.jpg" draggable="false" class="w-full max-h-screen opacity-75 z-0">
+    <img src="../../../../assets/logo.jpg" draggable="false" class="min-h-screen w-full max-h-screen opacity-75 z-0">
     <div *ngIf="loaded; else loadingCards" class="absolute top-0 flex flex-col gap-4 top-3/4">
-        <button (click)="navigateToPage('lobby')" class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">PLAY</button>
-        <button (click)="navigateToPage('decks')" class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">DECKS</button>
-        <button (click)="navigateToPage('options')" class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">OPTIONS</button>
+        <button (click)="navigateToPage('lobby')"
+            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">PLAY</button>
+        <button (click)="navigateToPage('decks')"
+            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">DECKS</button>
+        <button (click)="navigateToPage('options')"
+            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110">OPTIONS</button>
     </div>
-        <ng-template #loadingCards>
+    <ng-template #loadingCards>
             <div class="absolute top-0 flex flex-col gap-4 top-3/4">
-                <span class="text-emerald-700 text-3xl">Initializing card database...</span>
+            <span class="text-emerald-700 text-3xl">Initializing card database...</span>
                 <mat-progress-bar [value]="percentLoaded"></mat-progress-bar>
-            </div>
-        </ng-template>
+        </div>
+    </ng-template>
 </div>

@@ -108,7 +108,7 @@
                                     </div>
                                 </span>
                             </div>
-                            <div>
+                            <div class="flex flex-col items-center mb-1">
                                 <button (click)="this.openDialog('0ms', '0ms')"
                                     class="mt-4 rounded-full hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">Save</button>
                                 <button (click)="cancelCreate()"
@@ -184,28 +184,20 @@
                         </div>
                         <div class="flex m-auto overflow-scroll h-full top-0">
                             <div class="m-4 grid grid-cols-8 gap-y-8 gap-x-2">
-                                <div *ngFor="let card of filteredCards" class="flex flex-col content-center">
-                                    <app-card-display *ngIf="!(card.editions.length > 1); else altCard"
+                                <div *ngFor="let card of filteredCards|slice: (paginator.pageIndex*paginator.pageSize):((paginator.pageIndex+1)*paginator.pageSize)" class="flex flex-col content-center">
+                                    <app-card-display
                                         [cardData]="card" (click)="showCardInfo(card, null)"
                                         class="hover:cursor-pointer"></app-card-display>
                                     <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
                                         class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
                                         Add to Deck</button>
-                                    <ng-template #altCard>
-                                        
-                                        <app-card-display
-                                            [cardData]="card" (click)="showCardInfo(card, null)"
-                                            class="hover:cursor-pointer"></app-card-display>
-                                        <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
-                                            class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
-                                            Add to Deck</button>
-                                    </ng-template>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </ng-template>
             </div>
+            <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 100]" [showFirstLastButtons]="true" [length]="filteredCards.length" [pageIndex]="0"></mat-paginator>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>

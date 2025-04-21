@@ -5,6 +5,7 @@ import { Deck } from '../../../models/deck';
 import { Card } from '../../../models/card';
 import { DeckService } from '../../../services/deck-service/deck-service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { RoutingService } from '../../../services/routing/routing.service';
 
 @Component({
   selector: 'app-play-screen',
@@ -25,18 +26,12 @@ export class PlayScreenComponent {
   @ViewChild('drawer') drawer: MatSidenav;
   hoverCards: boolean = false;
 
-  constructor(private deckService: DeckService) { }
+  constructor(private deckService: DeckService, private routerService: RoutingService) { }
 
-  ngOnInit() {
-    this.loadDecks();
-  }
-
-
-  loadDecks() {
-    this.decksQuery.subscribe(decks => {
-      this.decks = decks;
-      this.loaded = true;
-      this.selectedDeck = decks[0];
+  async ngOnInit() {
+    let storedDeckName = localStorage.getItem('selectedDeck')?.replace(/['"]+/g, '');
+    await db.decks.toArray().then(res => {
+      this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
       this.shuffleDeck();
       this.drawCard(7);
     });
@@ -48,18 +43,14 @@ export class PlayScreenComponent {
       let shuffle = Math.floor(Math.random() * (this.selectedDeck.main.length));
 
       //swap the current with a random position
-      [this.selectedDeck.material[i], this.selectedDeck.main[shuffle]] = [this.selectedDeck.main[shuffle], this.selectedDeck.main[i]];
+      [this.selectedDeck.main[i], this.selectedDeck.main[shuffle]] = [this.selectedDeck.main[shuffle], this.selectedDeck.main[i]];
     }
   }
 
   drawCard(count: number) {
-    console.log(this.selectedDeck);
-    let drawnCard = this.deckService.drawCard(this.selectedDeck.main, count);
-    this.selectedDeck.main = this.selectedDeck.main.filter(card => {
-      !drawnCard.includes(card);
-    })
-    console.log(this.selectedDeck.main);
-    this.hand = [...drawnCard];
+    let drawnCards = this.selectedDeck.main.splice(0, count);
+    console.log(drawnCards);
+    this.hand = [...drawnCards];
   }
 
   viewMaterialDeck() {
@@ -78,6 +69,10 @@ export class PlayScreenComponent {
 
   getCardURL(blob: Blob) {
     return URL.createObjectURL(blob);
+  }
+
+  navigateToPage(page: string) {
+    this.routerService.navigateToPage(page);
   }
 
 }

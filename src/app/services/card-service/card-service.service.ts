@@ -15,7 +15,7 @@ export class CardService {
     return this.http.get<CardResponse>(url);
   }
 
-  getCardImages(imageLink: string) {
+  getCardImages(imageLink: string): Observable<Blob> {
     let url = `https://api.gatcg.com${imageLink}`
     return this.http.get(url, { responseType: 'blob' });
   }

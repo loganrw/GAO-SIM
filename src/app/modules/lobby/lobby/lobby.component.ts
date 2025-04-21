@@ -10,6 +10,7 @@ import {
   englishDataset,
   englishRecommendedTransformers,
 } from 'obscenity';
+import { Card } from '../../../models/card';
 
 @Component({
   selector: 'app-lobby',
@@ -17,13 +18,13 @@ import {
   styleUrl: './lobby.component.scss'
 })
 export class LobbyComponent {
-  client = new Client('ws://155-138-239-22.colyseus.dev:2567');
+  client = new Client('https://155-138-239-22.colyseus.dev');
   roomList: Room[] = [];
   decksQuery = liveQuery(() => db.decks.toArray());
   decks: Deck[] = [];
   selectedDeck: Deck;
   deckSelect = new FormControl('');
-  headerLinks = ['home', 'decks', 'options'];
+  headerLinks = ['home', 'decks', 'options', 'ai'];
   matcher = new RegExpMatcher({
     ...englishDataset.build(),
     ...englishRecommendedTransformers,
@@ -70,8 +71,10 @@ export class LobbyComponent {
           roomPassword: this.isPrivate ? this.roomPass : null,
         }
       }).then((res) => {
-        //this.client.joinById(res.data.roomId);
-        this.roomName = '';
+        if (res.statusCode !== 401) {
+          this.client.joinById(res.data.roomId);
+          this.navigateToPage('play');
+        }
       });
     }
   }
@@ -88,7 +91,6 @@ export class LobbyComponent {
           roomPassword: this.joinPass
         }
       }).then(res => {
-        console.log(res);
         if (res.statusCode !== 401) {
           this.navigateToPage('play');
         }
@@ -102,16 +104,21 @@ export class LobbyComponent {
     this.client.http.get('/room_list').then(res => this.roomList = JSON.parse(res.data));
   }
 
+  joinAiGame() {
+
+  }
 
   loadDecks() {
     this.decksQuery.subscribe(decks => {
       this.decks = decks;
       this.selectedDeck = this.decks[0];
+      localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0].name));
     });
   }
 
-  selectDeck(deck: Deck) {
-    this.selectedDeck = deck;
+  selectDeck(event: any) {
+    this.selectedDeck = event.value;
+    localStorage.setItem('selectedDeck', JSON.stringify(event.value.name));
   }
 
   navigateToPage(page: string) {

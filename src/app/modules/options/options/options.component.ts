@@ -19,7 +19,7 @@ export class OptionsComponent {
     ...englishDataset.build(),
     ...englishRecommendedTransformers,
   });
-  headerLinks = ['home', 'play', 'decks'];
+  headerLinks = ['home', 'play', 'decks', 'ai'];
 
   ngOnInit() {
     if (localStorage.getItem('playerName')) {
