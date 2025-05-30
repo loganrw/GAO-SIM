@@ -12,5 +12,8 @@
   ],
   "include": [
     "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules/colyseus.js"
   ]
 }
