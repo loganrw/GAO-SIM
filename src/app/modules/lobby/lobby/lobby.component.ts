@@ -45,10 +45,6 @@ export class LobbyComponent {
     this.playerName = localStorage.getItem('playerName');
   }
 
-  ngAfterViewInit() {
-    this.refreshRooms();
-  }
-
   createRoom() {
     this.client.http.get('/room_list').then(res => {
       this.roomList = JSON.parse(res.data);
@@ -102,6 +98,7 @@ export class LobbyComponent {
 
   refreshRooms() {
     this.client.http.get('/room_list').then(res => this.roomList = JSON.parse(res.data));
+    window.location.reload();
   }
 
   joinAiGame() {
@@ -112,7 +109,7 @@ export class LobbyComponent {
     this.decksQuery.subscribe(decks => {
       this.decks = decks;
       this.selectedDeck = this.decks[0];
-      localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0].name));
+      localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0]?.name));
     });
   }
 

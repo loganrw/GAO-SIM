@@ -6,6 +6,7 @@ import { Card } from '../../../models/card';
 import { DeckService } from '../../../services/deck-service/deck-service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RoutingService } from '../../../services/routing/routing.service';
+import { Client } from 'colyseus.js';
 
 @Component({
   selector: 'app-play-screen',
@@ -16,6 +17,7 @@ export class PlayScreenComponent {
 
 
   decksQuery = liveQuery(() => db.decks.toArray());
+  client = new Client('https://155-138-239-22.colyseus.dev');
   decks: Deck[] = [];
   selectedDeck: Deck;
   mainDeck: Card[];
@@ -73,6 +75,10 @@ export class PlayScreenComponent {
 
   navigateToPage(page: string) {
     this.routerService.navigateToPage(page);
+  }
+
+  surrender() {
+    this.navigateToPage('/');
   }
 
 }

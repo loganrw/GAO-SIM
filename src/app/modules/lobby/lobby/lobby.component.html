@@ -11,7 +11,7 @@
                 <mat-form-field>
                     <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck" [formControl]="deckSelect">
                         @for (deck of decks; track deck) {
-                        <mat-option [value]="deck" class="text-white">{{deck.name}}</mat-option>
+                        <mat-option [value]="deck" class="text-white">{{deck?.name}}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
