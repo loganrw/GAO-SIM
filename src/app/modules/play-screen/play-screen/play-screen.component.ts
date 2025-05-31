@@ -44,7 +44,6 @@ export class PlayScreenComponent {
     if (this.isPrivate === "true") {
       this.roomPassword = atob(this.aRoute.snapshot.queryParamMap.get('rp')!);
       this.roomName = this.aRoute.snapshot.queryParamMap.get('rn')!;
-      console.log(this.roomPassword);
       this.joinPrivateRoom();
     } else {
       this.client.joinById(this.roomId).then(res => this.currentRoom = res);
@@ -95,6 +94,7 @@ export class PlayScreenComponent {
   }
 
   joinPrivateRoom() {
+    console.log(this.roomName, this.roomPassword);
     this.client.http.post("/join_private", {
       body: {
         roomName: this.roomName,
