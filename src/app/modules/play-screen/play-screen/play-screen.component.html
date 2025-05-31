@@ -1,5 +1,8 @@
 <mat-drawer-container hasBackdrop>
     <mat-drawer #drawer mode="over" position="end" class="bg-[url('./assets/vines.png')] bg-no-repeat">
+        <div *ngIf="isPrivate && !passValid" class="bg-white-200">
+            Loading...
+        </div>
         <div *ngIf="currentCard && loaded" class="mt-2 p-2 flex flex-col items-center w-full">
             <div
                 class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">

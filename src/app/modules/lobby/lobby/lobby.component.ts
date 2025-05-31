@@ -86,20 +86,11 @@ export class LobbyComponent {
       this.validRoomPass = false;
       return;
     }
-    try {
-      this.client.http.post("/join_private", {
-        body: {
-          roomName: this.privateRoomName,
-          roomPassword: this.joinPass
-        }
-      }).then(res => {
-        if (res.statusCode !== 401) {
-          this.navigateToPage('play');
-        }
-      });
-    } catch {
-      this.validRoomPass = false;
-    }
+    this.navigateToPage("/play", {
+      private: "true",
+      rp: btoa(this.roomPass),
+      rn: this.roomName,
+    })
   }
 
   refreshRooms() {

@@ -21,6 +21,10 @@ export class PlayScreenComponent {
   client = new Client('https://155-138-239-22.colyseus.dev');
   currentRoom: Room;
   roomId: string;
+  roomName: string;
+  isPrivate: string;
+  passValid: boolean = false;
+  roomPassword: string;
   decks: Deck[] = [];
   selectedDeck: Deck;
   mainDeck: Card[];
@@ -36,7 +40,14 @@ export class PlayScreenComponent {
   async ngOnInit() {
     let storedDeckName = localStorage.getItem('selectedDeck')?.replace(/['"]+/g, '');
     this.roomId = this.aRoute.snapshot.queryParamMap.get('roomId')!;
-    this.client.joinById(this.roomId).then(res => this.currentRoom = res);
+    this.isPrivate = this.aRoute.snapshot.queryParamMap.get('private')!;
+    if (this.isPrivate === "true") {
+      this.roomPassword = atob(this.aRoute.snapshot.queryParamMap.get('rp')!);
+      this.roomName = this.aRoute.snapshot.queryParamMap.get('rn')!;
+      this.joinPrivateRoom();
+    } else {
+      this.client.joinById(this.roomId).then(res => this.currentRoom = res);
+    }
     await db.decks.toArray().then(res => {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
       this.shuffleDeck();
@@ -82,8 +93,20 @@ export class PlayScreenComponent {
     this.routerService.navigateToPage(page);
   }
 
+  joinPrivateRoom() {
+    this.client.http.post("/join_private", {
+      body: {
+        roomName: this.roomName,
+        roomPassword: this.roomPassword
+      }
+    }).then(res => {
+      if (res.statusCode == 401) {
+        this.passValid = true;
+      }
+    });
+  }
+
   surrender() {
-    console.log(this.currentRoom);
     this.currentRoom.leave(true).then(() => {
       this.navigateToPage('/');
     })
