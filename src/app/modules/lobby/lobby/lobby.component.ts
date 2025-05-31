@@ -82,7 +82,7 @@ export class LobbyComponent {
   }
 
   joinPrivateRoom() {
-    if (!this.isPrivate || this.joinPass === '' || this.privateRoomName === '') {
+    if (this.joinPass === '' || this.privateRoomName === '') {
       this.validRoomPass = false;
       return;
     }
