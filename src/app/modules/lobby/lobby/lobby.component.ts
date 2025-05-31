@@ -83,6 +83,7 @@ export class LobbyComponent {
 
   joinPrivateRoom() {
     if (this.joinPass === '' || this.privateRoomName === '') {
+      console.log("In join private room, pass invalid");
       this.validRoomPass = false;
       return;
     }
