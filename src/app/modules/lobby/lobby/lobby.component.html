@@ -23,7 +23,6 @@
                 <mat-icon class="ml-4 text-emerald-600 rounded-full bg-white mt-2" matTooltip="Refresh rooms"
                     (click)="refreshRooms()">refresh</mat-icon>
             </div>
-            <span>{{roomList.length}}</span>
             <div class="w-3/4" *ngFor="let room of roomList">
                 <div class="flex flex-row w-full hover:cursor-pointer">
                     <div
