@@ -75,9 +75,7 @@ export class LobbyComponent {
         }
       }).then(async (res) => {
         if (res.statusCode !== 401) {
-          this.client.joinById(res.data.roomId).then(res => {
-            this.navigateToPage("/play", { roomId: res.roomId });
-          });
+          this.navigateToPage("/play", { roomId: res.data.roomId });
         }
       });
     }
