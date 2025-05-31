@@ -42,7 +42,7 @@ export class PlayScreenComponent {
     this.roomId = this.aRoute.snapshot.queryParamMap.get('roomId')!;
     this.isPrivate = this.aRoute.snapshot.queryParamMap.get('private')!;
     if (this.isPrivate === "true") {
-      this.roomPassword = atob(this.aRoute.snapshot.queryParamMap.get('rp')!);
+      this.roomPassword = atob(this.aRoute.snapshot.queryParamMap.get('rp')!) as string;
       this.roomName = this.aRoute.snapshot.queryParamMap.get('rn')!;
       this.joinPrivateRoom();
     } else {
