@@ -89,8 +89,8 @@ export class LobbyComponent {
     }
     this.navigateToPage("/play", {
       private: "true",
-      rp: btoa(this.roomPass),
-      rn: this.roomName,
+      rp: btoa(this.joinPass),
+      rn: this.privateRoomName,
     })
   }
 
