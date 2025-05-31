@@ -12,6 +12,11 @@ import {
 } from 'obscenity';
 import { Card } from '../../../models/card';
 
+class CustomRoom extends Room {
+  clients: number;
+  maxClients: number;
+}
+
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
@@ -19,7 +24,8 @@ import { Card } from '../../../models/card';
 })
 export class LobbyComponent {
   client = new Client('https://155-138-239-22.colyseus.dev');
-  roomList: Room[] = [];
+  roomList: CustomRoom[] = [];
+  joinedRoom: Room;
   decksQuery = liveQuery(() => db.decks.toArray());
   decks: Deck[] = [];
   selectedDeck: Deck;
@@ -42,6 +48,7 @@ export class LobbyComponent {
 
   ngOnInit() {
     this.loadDecks();
+    this.refreshRooms();
     this.playerName = localStorage.getItem('playerName');
   }
 
@@ -66,10 +73,11 @@ export class LobbyComponent {
           createdBy: this.playerName,
           roomPassword: this.isPrivate ? this.roomPass : null,
         }
-      }).then((res) => {
+      }).then(async (res) => {
         if (res.statusCode !== 401) {
-          this.client.joinById(res.data.roomId);
-          this.navigateToPage('play');
+          this.client.joinById(res.data.roomId).then(res => {
+            this.navigateToPage("/play", { roomId: res.roomId });
+          });
         }
       });
     }
@@ -98,7 +106,6 @@ export class LobbyComponent {
 
   refreshRooms() {
     this.client.http.get('/room_list').then(res => this.roomList = JSON.parse(res.data));
-    window.location.reload();
   }
 
   joinAiGame() {
@@ -118,7 +125,7 @@ export class LobbyComponent {
     localStorage.setItem('selectedDeck', JSON.stringify(event.value.name));
   }
 
-  navigateToPage(page: string) {
-    this.routerService.navigateToPage(page);
+  navigateToPage(page: string, data?: any) {
+    this.routerService.navigateToPage(page, data);
   }
 }

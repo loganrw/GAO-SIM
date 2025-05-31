@@ -8,7 +8,7 @@ export class RoutingService {
 
   constructor(private router: Router) { }
 
-  navigateToPage(pageName: string) {
-    this.router.navigate(['/' + pageName]);
+  navigateToPage(pageName: string, data?: any) {
+    this.router.navigate(['/' + pageName], { queryParams: data });
   }
 }

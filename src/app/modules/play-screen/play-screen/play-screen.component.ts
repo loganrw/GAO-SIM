@@ -6,7 +6,8 @@ import { Card } from '../../../models/card';
 import { DeckService } from '../../../services/deck-service/deck-service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RoutingService } from '../../../services/routing/routing.service';
-import { Client } from 'colyseus.js';
+import { Client, Room } from 'colyseus.js';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-play-screen',
@@ -18,6 +19,8 @@ export class PlayScreenComponent {
 
   decksQuery = liveQuery(() => db.decks.toArray());
   client = new Client('https://155-138-239-22.colyseus.dev');
+  currentRoom: Room;
+  roomId: string;
   decks: Deck[] = [];
   selectedDeck: Deck;
   mainDeck: Card[];
@@ -28,10 +31,12 @@ export class PlayScreenComponent {
   @ViewChild('drawer') drawer: MatSidenav;
   hoverCards: boolean = false;
 
-  constructor(private deckService: DeckService, private routerService: RoutingService) { }
+  constructor(private deckService: DeckService, private routerService: RoutingService, private aRoute: ActivatedRoute) { }
 
   async ngOnInit() {
     let storedDeckName = localStorage.getItem('selectedDeck')?.replace(/['"]+/g, '');
+    this.roomId = this.aRoute.snapshot.queryParamMap.get('roomId')!;
+    this.client.joinById(this.roomId).then(res => this.currentRoom = res);
     await db.decks.toArray().then(res => {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
       this.shuffleDeck();
@@ -78,7 +83,10 @@ export class PlayScreenComponent {
   }
 
   surrender() {
-    this.navigateToPage('/');
+    console.log(this.currentRoom);
+    this.currentRoom.leave(true).then(() => {
+      this.navigateToPage('/');
+    })
   }
 
 }
