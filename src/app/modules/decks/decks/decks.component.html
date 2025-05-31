@@ -124,7 +124,7 @@
                             <div class="ml-2">
                                 <mat-form-field>
                                     <mat-label>Card Type</mat-label>
-                                    <mat-select [(ngModel)]="selectedTypes" (selectionChange)="filterType()"
+                                    <mat-select [(ngModel)]="selectedTypes" (selectionChange)="filterCards()"
                                         [formControl]="cardType" multiple>
                                         @for (type of cardTypes; track type) {
                                         <mat-option [value]="type">{{titleCaseWord(type)}}</mat-option>
@@ -135,7 +135,7 @@
                             <div class="ml-2">
                                 <mat-form-field>
                                     <mat-label>Speed</mat-label>
-                                    <mat-select [(ngModel)]="selectedSpeed" (selectionChange)="filterSpeed()"
+                                    <mat-select [(ngModel)]="selectedSpeed" (selectionChange)="filterCards()"
                                         [formControl]="cardSpeed" multiple>
                                         @for (speed of cardSpeeds; track speed) {
                                         <mat-option [value]="speed">{{getSpeed(speed)}}</mat-option>
@@ -145,11 +145,22 @@
                             </div>
                             <div class="ml-2">
                                 <mat-form-field>
-                                    <mat-label>Cost</mat-label>
-                                    <mat-select [(ngModel)]="selectedCost" (selectionChange)="filterCost()"
+                                    <mat-label>Memory Cost</mat-label>
+                                    <mat-select [(ngModel)]="selectedCostMemory" (selectionChange)="filterCards()"
                                         [formControl]="cardCost" multiple>
                                         @for (cost of cardCosts; track cost) {
-                                        <mat-option [value]="cost">{{cost}}</mat-option>
+                                        <mat-option [value]="cost">{{replaceNegative(cost)}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="ml-2">
+                                <mat-form-field>
+                                    <mat-label>Reserve Cost</mat-label>
+                                    <mat-select [(ngModel)]="selectedCostReserve" (selectionChange)="filterCards()"
+                                        [formControl]="cardCost" multiple>
+                                        @for (cost of cardCosts; track cost) {
+                                        <mat-option [value]="cost">{{replaceNegative(cost)}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -157,7 +168,7 @@
                             <div class="ml-2">
                                 <mat-form-field>
                                     <mat-label>Class</mat-label>
-                                    <mat-select [(ngModel)]="selectedClass" (selectionChange)="filterClass()"
+                                    <mat-select [(ngModel)]="selectedClass" (selectionChange)="filterCards()"
                                         [formControl]="cardClass" multiple>
                                         @for (class of cardClasses; track class) {
                                         <mat-option [value]="class">{{titleCaseWord(class)}}</mat-option>
@@ -168,7 +179,7 @@
                             <div class="ml-2">
                                 <mat-form-field>
                                     <mat-label>Element</mat-label>
-                                    <mat-select [(ngModel)]="selectedElements" (selectionChange)="filterElement()"
+                                    <mat-select [(ngModel)]="selectedElements" (selectionChange)="filterCards()"
                                         [formControl]="cardElement" multiple>
                                         @for (element of cardElements; track element) {
                                         <mat-option [value]="element">{{titleCaseWord(element)}}</mat-option>
@@ -184,9 +195,9 @@
                         </div>
                         <div class="flex m-auto overflow-scroll h-full top-0">
                             <div class="m-4 grid grid-cols-8 gap-y-8 gap-x-2">
-                                <div *ngFor="let card of filteredCards|slice: (paginator.pageIndex*paginator.pageSize):((paginator.pageIndex+1)*paginator.pageSize)" class="flex flex-col content-center">
-                                    <app-card-display
-                                        [cardData]="card" (click)="showCardInfo(card, null)"
+                                <div *ngFor="let card of filteredCards|slice: (paginator.pageIndex*paginator.pageSize):((paginator.pageIndex+1)*paginator.pageSize)"
+                                    class="flex flex-col content-center">
+                                    <app-card-display [cardData]="card" (click)="showCardInfo(card, null)"
                                         class="hover:cursor-pointer"></app-card-display>
                                     <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
                                         class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
@@ -197,7 +208,8 @@
                     </div>
                 </ng-template>
             </div>
-            <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 100]" [showFirstLastButtons]="true" [length]="filteredCards.length" [pageIndex]="0"></mat-paginator>
+            <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 100]"
+                [showFirstLastButtons]="true" [length]="filteredCards.length" [pageIndex]="0"></mat-paginator>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>

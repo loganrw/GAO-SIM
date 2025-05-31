@@ -38,11 +38,12 @@ export class DecksComponent implements OnInit {
   cardElement = new FormControl('');
   selectedTypes: string[] = [];
   selectedClass: string[] = [];
-  selectedCost: string[] = [];
+  selectedCostMemory: string[] = [];
+  selectedCostReserve: string[] = [];
   selectedSpeed: boolean[] = [];
   selectedElements: string[] = [];
   cardTypes: string[] = ['champion', 'ally', 'action', 'attack', 'item', 'weapon', "domain", "phantasia", "regalia"];
-  cardCosts: string[] = ["12", "10", "9", "8", "7", "3", "2", "1", "0"];
+  cardCosts: string[] = ["15", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "-1"];
   cardClasses: string[] = ['assassin', 'cleric', 'guardian', 'mage', 'ranger', 'tamer', 'warrior', 'spirit'];
   cardElements: string[] = ['norm', 'water', 'wind', 'crux', 'exia', 'astra', 'umbra', 'tera', 'arcane', 'luxem', 'neos']
   // fast speeds are true, slow is false, everything else is null
@@ -102,7 +103,8 @@ export class DecksComponent implements OnInit {
 
   searchCards() {
     this.selectedTypes = [];
-    this.selectedCost = [];
+    this.selectedCostMemory = [];
+    this.selectedCostReserve = [];
     this.selectedSpeed = [];
     this.filteredCards = this.cardList.filter((card) => {
       let filterRes = card.name.toLowerCase().includes(this.searchInput.toLowerCase());
@@ -113,59 +115,38 @@ export class DecksComponent implements OnInit {
     });
   }
 
-  filterType() {
-    if (this.selectedTypes.length == 0) {
-      this.filteredCards = this.cardList;
-      return;
+  filterCards() {
+    this.filteredCards = this.cardList;
+    if (this.selectedTypes.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return card.types.find((type => this.selectedTypes.includes(type.toLowerCase())));
+      });
     }
-    this.filteredCards = this.cardList.filter((card) => {
-      let filterRes = card.types.find((type => this.selectedTypes.includes(type.toLowerCase())));
-      return filterRes;
-    });
-  }
-
-  filterClass() {
-    if (this.selectedClass.length == 0) {
-      this.filteredCards = this.cardList;
-      return;
+    if (this.selectedClass.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return card.classes.find((className => this.selectedClass.includes(className.toLowerCase())));
+      });
     }
-    this.filteredCards = this.cardList.filter((card) => {
-      let filterRes = card.classes.find((className => this.selectedClass.includes(className.toLowerCase())));
-      return filterRes;
-    });
-  }
-
-  filterElement() {
-    if (this.selectedElements.length == 0) {
-      this.filteredCards = this.cardList;
-      return;
+    if (this.selectedElements.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return this.selectedElements.includes(card.element.toLowerCase());
+      });
     }
-    this.filteredCards = this.cardList.filter((card) => {
-      let filterRes = this.selectedElements.includes(card.element.toLowerCase());
-      return filterRes;
-    });
-  }
-
-  filterCost() {
-    if (this.selectedCost.length == 0) {
-      this.filteredCards = this.cardList;
-      return;
+    if (this.selectedCostMemory.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return this.selectedCostMemory.includes(card.cost_memory?.toString());
+      });
     }
-    this.filteredCards = this.cardList.filter((card) => {
-      let filterRes = this.selectedCost.includes(card.cost_memory?.toString());
-      return filterRes;
-    });
-  }
-
-  filterSpeed() {
-    if (this.selectedSpeed.length == 0) {
-      this.filteredCards = this.cardList;
-      return;
+    if (this.selectedCostReserve.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return this.selectedCostReserve.includes(card.cost_reserve?.toString());
+      });
     }
-    this.filteredCards = this.cardList.filter((card) => {
-      let filterRes = this.selectedSpeed.includes(card.speed);
-      return filterRes;
-    });
+    if (this.selectedSpeed.length > 0) {
+      this.filteredCards = this.filteredCards.filter((card) => {
+        return this.selectedSpeed.includes(card.speed);
+      });
+    }
   }
 
   getSpeed(speed: boolean): string {
@@ -335,6 +316,11 @@ export class DecksComponent implements OnInit {
         this.saveDeck();
       }
     });
+  }
+
+  replaceNegative(cost: string) {
+    if (cost === "-1") return "X";
+    else return cost;
   }
 
   importDeck(enterAnimationDuration: string, exitAnimationDuration: string) {
