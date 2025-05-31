@@ -11,6 +11,7 @@ import {
   englishRecommendedTransformers,
 } from 'obscenity';
 import { Card } from '../../../models/card';
+import { Subscription, interval } from 'rxjs';
 
 class CustomRoom extends Room {
   clients: number;
@@ -43,6 +44,7 @@ export class LobbyComponent {
   validRoomPass: boolean = true;
   validRoomName: boolean = true;
   playerName: string | null;
+  refreshLobbies: Subscription;
 
   constructor(private routerService: RoutingService) { }
 
@@ -50,9 +52,14 @@ export class LobbyComponent {
     this.loadDecks();
     this.refreshRooms();
     this.playerName = localStorage.getItem('playerName');
+    this.refreshLobbies = interval(1000).subscribe(() => { this.refreshRooms(); });
   }
 
   createRoom() {
+    if (!this.selectedDeck) {
+      alert("Select or create a deck before joining a game.")
+      return;
+    }
     this.client.http.get('/room_list').then(res => {
       this.roomList = JSON.parse(res.data);
       this.roomList.forEach(room => {
@@ -82,17 +89,35 @@ export class LobbyComponent {
     }
   }
 
+  joinRoom(room: Room) {
+    if (!this.selectedDeck) {
+      alert("Select or create a deck before joining a game.")
+      return;
+    }
+    this.navigateToPage("/play", { roomId: room.roomId });
+  }
+
   joinPrivateRoom() {
+    if (!this.selectedDeck) {
+      alert("Select or create a deck before joining a game.")
+      return;
+    }
     if (this.joinPass === '' || this.privateRoomName === '') {
-      console.log("In join private room, pass invalid");
       this.validRoomPass = false;
       return;
     }
-    this.navigateToPage("/play", {
-      private: "true",
-      rp: btoa(this.joinPass),
-      rn: this.privateRoomName,
-    })
+    this.client.http.post("/join_private", {
+      body: {
+        roomName: this.privateRoomName,
+        roomPassword: this.joinPass
+      }
+    }
+    ).then(res => {
+      let roomId = JSON.parse(res.data);
+      this.navigateToPage("/play", { roomId: roomId })
+    }).catch(err => {
+      this.validRoomPass = false;
+    });
   }
 
   refreshRooms() {
@@ -100,7 +125,10 @@ export class LobbyComponent {
   }
 
   joinAiGame() {
-
+    if (!this.selectDeck) {
+      alert("Select or create a deck before joining a game.")
+      return;
+    }
   }
 
   loadDecks() {

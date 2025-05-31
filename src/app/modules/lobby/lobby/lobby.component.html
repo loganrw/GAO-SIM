@@ -24,7 +24,7 @@
                     (click)="refreshRooms()">refresh</mat-icon>
             </div>
             <div class="w-3/4" *ngFor="let room of roomList">
-                <div class="flex flex-row w-full hover:cursor-pointer">
+                <div (click)="joinRoom(room)" class="flex flex-row w-full hover:cursor-pointer">
                     <div
                         class="rounded-md flex flex-row bg-white text-emerald-600 p-4 mt-1 mb-1 w-full hover:bg-slate-200 border-gray-600 shadow-md border-2 w-full">
                         <span class="text-left ml-2 w-5/6" matTooltip="Join room">{{room.name}}</span>
@@ -43,7 +43,6 @@
         <div class="flex flex-col items-center mb-2 ">
             <span *ngIf="!validRoomName" class="text-red-500 mt-1 mb-1 text-sm">Room name is not valid or already
                 exists</span>
-            <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm overflow-none">Room password is not valid</span>
             <input class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName" placeholder="room name">
             <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomPass"
                 placeholder="room password">
@@ -61,14 +60,11 @@
         <span class="text-white text-lg mt-2 underline">Join Room</span>
         <div class="flex flex-col items-center mb-2">
             <span class="text-white mt-2">Private</span>
+            <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm overflow-none">Room name or password is not valid</span>
             <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="privateRoomName" placeholder="name">
             <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="joinPass" placeholder="password">
             <button (click)="joinPrivateRoom()"
                 class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Join</button>
-        </div>
-        <div class="flex flex-col items-center mb-2">
-            <span class="text-white mt-2">Random</span>
-            <button class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 p-4">Join Random</button>
         </div>
     </div>
     <div

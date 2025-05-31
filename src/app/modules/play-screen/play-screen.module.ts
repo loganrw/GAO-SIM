@@ -13,6 +13,7 @@ import { HandComponent } from '../../components/hand/hand.component';
 import { GraveyardComponent } from '../../components/graveyard/graveyard.component';
 import { BanishZoneComponent } from '../../components/banish-zone/banish-zone.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     HttpClientModule,
     MatSidenavModule,
     PlayScreenRoutingModule,
+    MatProgressSpinnerModule,
     MatIconModule,
     MatMenuModule,
     MatButtonModule
