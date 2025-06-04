@@ -59,7 +59,7 @@ export class LobbyComponent {
   }
 
   createRoom() {
-    if (!this.selectedDeck) {
+    if (!this.selectedDeck.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -91,7 +91,7 @@ export class LobbyComponent {
   }
 
   joinRoom(room: Room) {
-    if (!this.selectedDeck) {
+    if (!this.selectedDeck.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -100,7 +100,7 @@ export class LobbyComponent {
   }
 
   joinPrivateRoom() {
-    if (!this.selectedDeck) {
+    if (!this.selectedDeck.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -128,7 +128,7 @@ export class LobbyComponent {
   }
 
   joinAiGame() {
-    if (!this.selectDeck) {
+    if (!this.selectedDeck.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -138,14 +138,34 @@ export class LobbyComponent {
   loadDecks() {
     this.decksQuery.subscribe(decks => {
       this.decks = decks;
-      this.selectedDeck = this.decks[0];
-      localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0]?.name));
+      if (this.decks[0].isValid) {
+        console.log("selected valid deck!", console.log(this.decks[0]))
+        this.selectedDeck = this.decks[0];
+        localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0]?.name));
+      }
     });
   }
 
   selectDeck(event: any) {
-    this.selectedDeck = event.value;
-    localStorage.setItem('selectedDeck', JSON.stringify(event.value.name));
+    if (event.value.isValid) {
+      this.selectedDeck = event.value;
+      localStorage.setItem('selectedDeck', JSON.stringify(event.value.name));
+    } else if (!event.value.isValid) {
+      this.showPopup = true;
+      this.popupMessage = "Selected deck is not valid. Please select a valid deck.";
+      this.selectedDeck = {} as Deck;
+      return;
+    }
+  }
+
+  checkValidDeck(deck: Deck): boolean {
+    if (deck.main.length < 60) {
+      return false;
+    } else if (!deck.material.find((card) => { return (card.types.includes("CHAMPION") && card.level === 0) })) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   navigateToPage(page: string, data?: any) {

@@ -74,6 +74,7 @@ export class DecksComponent implements OnInit {
   selectedCard: Card;
   // header links
   headerLinks = ['home', 'play', 'options', 'ai'];
+  // Deck Validation
 
 
 
@@ -240,19 +241,38 @@ export class DecksComponent implements OnInit {
     return counts;
   }
 
+  checkValidDeck(deck: Deck): boolean {
+    if (deck.main.length < 60) {
+      return false;
+    } else if (!deck.material.find((card) => { return (card.types.includes("CHAMPION") && card.level === 0) })) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   async saveDeck() {
     this.isCreatingDeck = false;
+    let deckName: string;
+    if (this.deckName === this.newDeckName && this.newDeckName.length > 0 && this.deckName !== '') {
+      deckName = this.newDeckName;
+    } else {
+      deckName = this.deckName;
+    }
     let deck: Deck = {
-      name: this.deckName === this.newDeckName ? this.deckName : this.newDeckName,
+      name: deckName,
       main: this.mainDeck,
-      material: this.materialDeck
+      material: this.materialDeck,
+      isValid: false,
     };
+    deck.isValid = this.checkValidDeck(deck);
     if (this.isEditingDeck) {
       await db.decks.get({ name: this.deckName }).then(async (dbDeck: any) => {
         if (deck) await db.decks.update(dbDeck.id, {
-          name: this.deckName === this.newDeckName ? this.deckName : this.newDeckName,
+          name: deckName,
           main: this.mainDeck,
-          material: this.materialDeck
+          material: this.materialDeck,
+          isValid: deck.isValid,
         });
         this.isEditingDeck = false;
         this.loadDecks();
@@ -331,6 +351,7 @@ export class DecksComponent implements OnInit {
       name: 'TEST',
       main: [],
       material: [],
+      isValid: false,
     };
     let dialogRef = this.dialog.open(ImportModalComponent, {
       width: '500px',

@@ -52,7 +52,9 @@
                             <mat-accordion>
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
-                                        <mat-panel-title> {{deck.name}} </mat-panel-title>
+                                        <mat-panel-title> {{deck.name}} <mat-icon *ngIf="!checkValidDeck(deck)"
+                                                class="ml-auto text-red-700"
+                                                matTooltip="Decks must contain a level 0 champion and at least 60 cards!">error</mat-icon></mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <div class="flex flex-col items-center">
                                         <div class="mt-2 mb-4">
@@ -82,7 +84,14 @@
                     <ng-template #creatingDeck class="flex flex-col">
                         <div
                             class="mx-8 border-2 border-solid border-gray-200 rounded-md flex flex-col items-center w-[98%]">
-                            <input *ngIf="isEditingDeck" [placeholder]="deckName" [(ngModel)]="newDeckName" class="rounded-md mb-2 text-center border border-solid mt-2">
+                            <input *ngIf="isEditingDeck" [placeholder]="deckName" [(ngModel)]="newDeckName"
+                                class="rounded-md mb-2 text-center border border-solid mt-2">
+                            <div class="flex flex-row items-center mb-2 mt-2">
+                                <button (click)="this.openDialog('0ms', '0ms')"
+                                    class="mt-4 rounded-full hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">Save</button>
+                                <button (click)="cancelCreate()"
+                                    class="mt-4 ml-2 rounded-full hover:bg-gradient-to-t hover:from-red-600 hover:to-red-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-red-700 to-red-800 text-white">Cancel</button>
+                            </div>
                             <span class="text-emerald-700">Main Deck</span><span
                                 class="ml-2 text-emerald-700 block">{{mainDeckCount}}</span>
                             <div *ngFor="let card of mainDeckDisplay; let i = index" class="flex flex-row w-full">
@@ -108,12 +117,6 @@
                                             (click)="removeCard(card, 'material')">cancel</mat-icon>
                                     </div>
                                 </span>
-                            </div>
-                            <div class="flex flex-col items-center mb-1">
-                                <button (click)="this.openDialog('0ms', '0ms')"
-                                    class="mt-4 rounded-full hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">Save</button>
-                                <button (click)="cancelCreate()"
-                                    class="mt-4 ml-2 rounded-full hover:bg-gradient-to-t hover:from-red-600 hover:to-red-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-red-700 to-red-800 text-white">Cancel</button>
                             </div>
                         </div>
                     </ng-template>

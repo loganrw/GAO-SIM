@@ -11,9 +11,10 @@
                 <div class="flex flex-col items-left text-center w-[95%]">
                     <mat-form-field>
                         <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck"
-                            [formControl]="deckSelect">
+                            [formControl]="deckSelect" aria-placeholder="Select a deck">
                             @for (deck of decks; track deck) {
-                            <mat-option [value]="deck" class="text-white">{{deck?.name}}</mat-option>
+                            <mat-option [value]="deck" class="text-white">{{deck?.name}}<mat-icon *ngIf="!checkValidDeck(deck)" class="ml-auto text-red-700"
+                                matTooltip="Decks must contain a level 0 champion and at least 60 cards!">error</mat-icon></mat-option>
                             }
                         </mat-select>
                     </mat-form-field>
@@ -26,7 +27,7 @@
                     <span *ngIf="!validRoomName" class="text-red-500 mt-1 mb-1 text-sm">Room name is not valid or
                         already
                         exists</span>
-                    <input class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName"
+                    <input maxlength="24" class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName"
                         placeholder="room name">
                     <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2 w-[95%]"
                         [(ngModel)]="roomPass" placeholder="room password">
@@ -36,7 +37,7 @@
                             class="accent-emerald-600 borer border-white ml-2 w-4 h-4">
                     </div>
                     <button class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 p-4"
-                        (click)="createRoom()">Submit</button>
+                        (click)="createRoom()">Create</button>
                 </div>
             </div>
             <div
