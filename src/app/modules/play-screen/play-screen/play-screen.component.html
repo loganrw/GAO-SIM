@@ -50,10 +50,40 @@
                     </button>
                 </mat-menu>
             </div>
+            <div class="w-1/6 rounded-full h-4 bg-gray-700 absolute top-[175px] -left-4 -rotate-90">
+                <div class="shadow-sm shadow-sky-200 bg-gradient-to-b from-sky-400 to-sky-700 h-4 rounded-full text-center leading-tight text-white"
+                    style="width: 100%">{{enemyLife}}</div>
+            </div>
+            <div class="w-1/6 rounded-full h-4  bg-gray-700 absolute bottom-[200px] -right-8 -rotate-90">
+                <div class="shadow-sm shadow-sky-200 bg-gradient-to-b from-sky-400 to-sky-700 h-4 rounded-full text-center leading-tight text-white"
+                    style="width: 100%">{{playerLife}}</div>
+            </div>
             <app-main-deck class="absolute xl:bottom-[165px] right-[-76px] bottom-[185px]"></app-main-deck>
-            <app-material-deck class="absolute xl:left-[230px] xl:bottom-[160px] left-[237px] bottom-[185px]"></app-material-deck>
-            <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand" (currentCard)="setCurrentCard($event)"
-               [ngClass]="hoverCards ? 'bottom-0' : 'bottom-[-275px]'" class="left-[8%] fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
+            <app-material-deck
+                class="absolute xl:left-[230px] xl:bottom-[160px] left-[237px] bottom-[185px]"></app-material-deck>
+            <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
+                (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : 'bottom-[-275px]'"
+                class="left-[8%] fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
         </div>
+        <button *ngIf="!console.opened" (click)="toggleConsole()" class="bottom-4 left-6 absolute">
+            <mat-icon class="text-ga-blue">chat</mat-icon>
+        </button>
     </mat-drawer-content>
+    <mat-drawer #console mode="over" position="start" id="console">
+        <div class="flex flex-col items-center w-full h-full">
+            <div *ngFor="let message of consoleMessages" class="w-full flex flex-col items-center text-center mt-2">
+                <div class="mt-2 bg-white font-bold rounded-md p-2 w-3/4" [ngClass]="isP1 ? 'text-ga-blue' : 'text-red-400'">
+                    {{message}}
+                </div>
+            </div>
+            <div class="bottom-0 absolute rounded-md bg-white w-[95%]">
+                <div class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!')" class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it On!</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Nice Play.')" class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Nice Play.</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Good Game.')" class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Good Game.</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Oops!')" class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Oops!</button>
+                </div>
+            </div>
+        </div>
+    </mat-drawer>
 </mat-drawer-container>

@@ -74,7 +74,6 @@ export class LobbyComponent {
       }
     });
     if (this.validRoomName) {
-      console.log(this.isPrivate);
       this.client.http.post("/create_room", {
         body: {
           roomName: this.roomName,
