@@ -62,7 +62,11 @@ export class PlayScreenComponent {
       this.currentRoom.send("send-message", { data: this.playerName + " joined the room!" });
       const $ = getStateCallbacks(this.currentRoom);
       $(this.currentRoom.state)['players'].onAdd((player, sessionId) => {
-        if (this.currentRoom.state.p1Id === sessionId) this.isP1 = true;
+        if (this.currentRoom.state.p1Id === sessionId) {
+          this.isP1 = true;
+        } else {
+          this.playAudio("./assets/room-join.mp3");
+        }
       });
       this.currentRoom.onMessage("message-sent", (data) => {
         this.consoleMessages.push({
@@ -96,6 +100,13 @@ export class PlayScreenComponent {
 
   viewMaterialDeck() {
 
+  }
+
+  playAudio(src: string) {
+    let audio = new Audio();
+    audio.src = src;
+    audio.load();
+    audio.play();
   }
 
   setPlayerLife(value: number) {
