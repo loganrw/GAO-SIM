@@ -73,7 +73,7 @@ export class LobbyComponent {
         }
       });
     });
-    if (!this.matcher.hasMatch(this.roomName) && this.roomName && !(this.roomName === '') && this.validRoomName) {
+    if (!this.matcher.getAllMatches(this.roomName).length && this.roomName && !(this.roomName === '') && this.validRoomName) {
       this.client.http.post("/create_room", {
         body: {
           roomName: this.roomName,

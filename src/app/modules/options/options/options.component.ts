@@ -31,7 +31,7 @@ export class OptionsComponent {
 
   changeName() {
     // Check for naughty words
-    if (this.matcher.hasMatch(this.newPlayerName)) {
+    if (this.matcher.getAllMatches(this.newPlayerName).length) {
       this.validInput = false;
       return;
     }
