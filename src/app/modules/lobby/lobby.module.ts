@@ -10,11 +10,14 @@ import { HeaderModule } from '../../components/header/header.module';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PopupModalComponent } from '../../components/popup-modal/popup-modal.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
   declarations: [
-    LobbyComponent
+    LobbyComponent,
+    PopupModalComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     LobbyRoutingModule,
     HttpClientModule,
     MatButtonModule,
+    MatPaginatorModule,
     MatIconModule,
     MatMenuModule,
     MatSelectModule,

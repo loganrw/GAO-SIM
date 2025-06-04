@@ -45,6 +45,9 @@ export class LobbyComponent {
   validRoomName: boolean = true;
   playerName: string | null;
   refreshLobbies: Subscription;
+  // Modal settings
+  popupMessage: string = '';
+  showPopup: boolean = false;
 
   constructor(private routerService: RoutingService) { }
 
@@ -57,7 +60,8 @@ export class LobbyComponent {
 
   createRoom() {
     if (!this.selectedDeck) {
-      alert("Select or create a deck before joining a game.")
+      this.showPopup = true;
+      this.popupMessage = "Select or create a deck before joining a game.";
       return;
     }
     this.client.http.get('/room_list').then(res => {
@@ -68,12 +72,8 @@ export class LobbyComponent {
           return;
         }
       });
-      if (this.matcher.hasMatch(this.roomName) || !this.roomName || this.roomName === '') {
-        this.validRoomName = false;
-        return;
-      }
     });
-    if (this.validRoomName) {
+    if (!this.matcher.hasMatch(this.roomName) && this.roomName && !(this.roomName === '')) {
       this.client.http.post("/create_room", {
         body: {
           roomName: this.roomName,
@@ -85,12 +85,15 @@ export class LobbyComponent {
           this.navigateToPage("/play", { roomId: res.data.roomId });
         }
       });
+    } else {
+      this.validRoomName = false;
     }
   }
 
   joinRoom(room: Room) {
     if (!this.selectedDeck) {
-      alert("Select or create a deck before joining a game.")
+      this.showPopup = true;
+      this.popupMessage = "Select or create a deck before joining a game.";
       return;
     }
     this.navigateToPage("/play", { roomId: room.roomId });
@@ -98,7 +101,8 @@ export class LobbyComponent {
 
   joinPrivateRoom() {
     if (!this.selectedDeck) {
-      alert("Select or create a deck before joining a game.")
+      this.showPopup = true;
+      this.popupMessage = "Select or create a deck before joining a game.";
       return;
     }
     if (this.joinPass === '' || this.privateRoomName === '') {
@@ -125,7 +129,8 @@ export class LobbyComponent {
 
   joinAiGame() {
     if (!this.selectDeck) {
-      alert("Select or create a deck before joining a game.")
+      this.showPopup = true;
+      this.popupMessage = "Select or create a deck before joining a game.";
       return;
     }
   }

@@ -1,33 +1,81 @@
 <div class="w-full h-full absolute z-[-1001] overflow-hidden bg-slate-500"></div>
 <img src="../../../../assets/lobby-bg.png"
     class="object-fill w-full h-full absolute z-[-1000] opacity-30 overflow-hidden">
-<div class="max-h-screen overflow-hidden">
+<div class="max-h-screen overflow-y-scroll overflow-x-hidden">
     <app-header [headerLinks]="headerLinks" [colorTheme]="'white'"></app-header>
     <div class="flex flex-row">
-        <div
-            class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center">
-            <span class="text-white text-lg mt-2 underline">Selected Deck</span>
-            <div class="flex flex-col items-left text-center w-[95%]">
-                <mat-form-field>
-                    <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck" [formControl]="deckSelect">
-                        @for (deck of decks; track deck) {
-                        <mat-option [value]="deck" class="text-white">{{deck?.name}}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+        <div class="w-1/4 h-1/2 mb-4">
+            <div
+                class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md ml-8 items-center">
+                <span class="text-white text-lg mt-2 underline">Selected Deck</span>
+                <div class="flex flex-col items-left text-center w-[95%]">
+                    <mat-form-field>
+                        <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck"
+                            [formControl]="deckSelect">
+                            @for (deck of decks; track deck) {
+                            <mat-option [value]="deck" class="text-white">{{deck?.name}}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div
+                class="flex flex-col h-[50%] border-2 border-solid border-white rounded-md ml-8 items-center mt-4">
+                <span class="text-white text-lg mt-2 underline">Create Room</span>
+                <div class="flex flex-col items-center mb-2 ">
+                    <span *ngIf="!validRoomName" class="text-red-500 mt-1 mb-1 text-sm">Room name is not valid or
+                        already
+                        exists</span>
+                    <input class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName"
+                        placeholder="room name">
+                    <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2 w-[95%]"
+                        [(ngModel)]="roomPass" placeholder="room password">
+                    <div class="flex flex-row mt-1 mb-1 items-center">
+                        <span class="text-white">Private room?</span>
+                        <input type="checkbox" [(ngModel)]="isPrivate"
+                            class="accent-emerald-600 borer border-white ml-2 w-4 h-4">
+                    </div>
+                    <button class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 p-4"
+                        (click)="createRoom()">Submit</button>
+                </div>
+            </div>
+            <div
+                class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md ml-8 items-center mt-4">
+                <span class="text-white text-lg mt-2 underline">Join Room</span>
+                <div class="flex flex-col items-center mb-2">
+                    <span class="text-white mt-2">Private</span>
+                    <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm overflow-none">Room name or
+                        password is
+                        not valid</span>
+                    <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="privateRoomName"
+                        placeholder="name">
+                    <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="joinPass"
+                        placeholder="password">
+                    <button (click)="joinPrivateRoom()"
+                        class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Join</button>
+                </div>
+            </div>
+            <div
+                class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md ml-8 items-center mt-4">
+                <span class="text-white text-lg mt-2 underline">Play AI</span>
+                <div class="flex flex-col items-center mb-2">
+                    <button (click)="joinAiGame()"
+                        class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Play</button>
+                </div>
             </div>
         </div>
-        <div class="flex flex-col items-center border-2 border-solid border-white rounded-md ml-4 w-[60%] mr-4">
+        <div class="flex flex-col items-center border-2 border-solid border-white rounded-md ml-4 w-3/4 mr-4 mb-4">
             <div class="flex flex-row items-center">
                 <span class="text-white text-lg mt-2 underline">Available Rooms</span>
                 <mat-icon class="ml-4 text-emerald-600 rounded-full bg-white mt-2" matTooltip="Refresh rooms"
                     (click)="refreshRooms()">refresh</mat-icon>
             </div>
-            <div class="w-3/4" *ngFor="let room of roomList">
-                <div (click)="joinRoom(room)" class="flex flex-row w-full hover:cursor-pointer">
+            <div class="w-3/4">
+                <div class="flex flex-row w-full hover:cursor-pointer" *ngFor="let room of roomList|slice: (paginator.pageIndex*paginator.pageSize):((paginator.pageIndex+1)*paginator.pageSize)">
                     <div
                         class="rounded-md flex flex-row bg-white text-emerald-600 p-4 mt-1 mb-1 w-full hover:bg-slate-200 border-gray-600 shadow-md border-2 w-full">
                         <span class="text-left ml-2 w-5/6" matTooltip="Join room">{{room.name}}</span>
+                        <span class="text-left ml-2 w-5/6" matTooltip="Join room">TEST</span>
                         <div class="flex flex-row right-0 w-1/6">
                             <mat-icon class="text-emerald-600">person</mat-icon>
                             <span class="text-emerald-600 ml-2">{{room.clients}}/{{room.maxClients}}</span>
@@ -35,44 +83,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div
-        class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center mt-4">
-        <span class="text-white text-lg mt-2 underline">Create Room</span>
-        <div class="flex flex-col items-center mb-2 ">
-            <span *ngIf="!validRoomName" class="text-red-500 mt-1 mb-1 text-sm">Room name is not valid or already
-                exists</span>
-            <input class="px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomName" placeholder="room name">
-            <input *ngIf="isPrivate" class="mt-1 mb-1 px-2 rounded-md border border-white mt-2 w-[95%]" [(ngModel)]="roomPass"
-                placeholder="room password">
-            <div class="flex flex-row mt-1 mb-1 items-center">
-                <span class="text-white">Private room?</span>
-                <input type="checkbox" [(ngModel)]="isPrivate"
-                    class="accent-emerald-600 borer border-white ml-2 w-4 h-4">
-            </div>
-            <button class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 p-4"
-                (click)="createRoom()">Submit</button>
-        </div>
-    </div>
-    <div
-        class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center mt-4">
-        <span class="text-white text-lg mt-2 underline">Join Room</span>
-        <div class="flex flex-col items-center mb-2">
-            <span class="text-white mt-2">Private</span>
-            <span *ngIf="!validRoomPass" class="text-red-500 mt-1 mb-1 text-sm overflow-none">Room name or password is not valid</span>
-            <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="privateRoomName" placeholder="name">
-            <input class="px-2 rounded-md border border-white mt-2  w-[95%]" [(ngModel)]="joinPass" placeholder="password">
-            <button (click)="joinPrivateRoom()"
-                class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Join</button>
-        </div>
-    </div>
-    <div
-        class="flex flex-col left-0 h-[50%] border-2 border-solid border-white rounded-md w-[15%] ml-8 items-center mt-4">
-        <span class="text-white text-lg mt-2 underline">Play AI</span>
-        <div class="flex flex-col items-center mb-2">
-            <button (click)="joinAiGame()"
-                class="rounded-md bg-white hover:bg-slate-200 mt-2 text-emerald-600 px-8 py-4">Play</button>
+                            <mat-paginator class="w-full mt-auto !bg-gray-300" #paginator [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 100]" [showFirstLastButtons]="true"
+                                [length]="roomList.length" [pageIndex]="0"></mat-paginator>
         </div>
     </div>
 </div>
+<app-popup-modal [message]="popupMessage" [opened]="showPopup" (openEvent)="showPopup = $event"></app-popup-modal>
