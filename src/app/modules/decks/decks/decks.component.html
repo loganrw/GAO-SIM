@@ -82,6 +82,7 @@
                     <ng-template #creatingDeck class="flex flex-col">
                         <div
                             class="mx-8 border-2 border-solid border-gray-200 rounded-md flex flex-col items-center w-[98%]">
+                            <input *ngIf="isEditingDeck" [placeholder]="deckName" [(ngModel)]="newDeckName" class="rounded-md mb-2 text-center border border-solid mt-2">
                             <span class="text-emerald-700">Main Deck</span><span
                                 class="ml-2 text-emerald-700 block">{{mainDeckCount}}</span>
                             <div *ngFor="let card of mainDeckDisplay; let i = index" class="flex flex-row w-full">

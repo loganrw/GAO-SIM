@@ -64,6 +64,7 @@ export class DecksComponent implements OnInit {
   // Track card elements to make sure the player only uses elements for their champion. normal element is always activated
   activeCardElements: string[] = ["NORM"];
   deckName: string = '';
+  newDeckName: string = '';
   // Deck editing
   isEditingDeck: boolean = false;
   originalDeck: Deck = {} as Deck;
@@ -204,6 +205,7 @@ export class DecksComponent implements OnInit {
     if (this.isEditingDeck) {
       this.mainDeck = this.originalDeck.main;
       this.materialDeck = this.originalDeck.material;
+      this.newDeckName = this.deckName;
       this.saveDeck();
     } else {
       // reset the deck info
@@ -241,13 +243,14 @@ export class DecksComponent implements OnInit {
   async saveDeck() {
     this.isCreatingDeck = false;
     let deck: Deck = {
-      name: this.deckName,
+      name: this.deckName === this.newDeckName ? this.deckName : this.newDeckName,
       main: this.mainDeck,
       material: this.materialDeck
     };
     if (this.isEditingDeck) {
       await db.decks.get({ name: this.deckName }).then(async (dbDeck: any) => {
         if (deck) await db.decks.update(dbDeck.id, {
+          name: this.deckName === this.newDeckName ? this.deckName : this.newDeckName,
           main: this.mainDeck,
           material: this.materialDeck
         });
