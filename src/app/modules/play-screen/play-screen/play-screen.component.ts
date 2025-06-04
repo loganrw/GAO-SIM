@@ -3,12 +3,16 @@ import { db } from '../../../services/database/database.service';
 import { liveQuery } from 'dexie';
 import { Deck } from '../../../models/deck';
 import { Card } from '../../../models/card';
-import { DeckService } from '../../../services/deck-service/deck-service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RoutingService } from '../../../services/routing/routing.service';
 import { Client, getStateCallbacks, Room } from 'colyseus.js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameManager } from '../../../services/multiplayer/game-manager';
+
+interface Message {
+  message: string,
+  isEnemy: boolean
+}
 
 @Component({
   selector: 'app-play-screen',
@@ -36,7 +40,7 @@ export class PlayScreenComponent {
   @ViewChild('console') console: MatSidenav;
   consoleOpen: boolean = false;
   hoverCards: boolean = false;
-  consoleMessages: string[] = [];
+  consoleMessages: Message[] = [];
   playerName: string;
   isP1: boolean = false;
   canSendMessage: boolean = true;
@@ -51,13 +55,20 @@ export class PlayScreenComponent {
       this.currentRoom = res;
       this.setPlayerLife(20);
       this.playerLife = 20;
-      this.consoleMessages.push(this.playerName + " joined the room!");
+      this.consoleMessages.push({
+        message: this.playerName + " joined the room!",
+        isEnemy: false,
+      });
+      this.currentRoom.send("send-message", { data: this.playerName + " joined the room!" });
       const $ = getStateCallbacks(this.currentRoom);
       $(this.currentRoom.state)['players'].onAdd((player, sessionId) => {
         if (this.currentRoom.state.p1Id === sessionId) this.isP1 = true;
       });
       this.currentRoom.onMessage("message-sent", (data) => {
-        this.consoleMessages.push(data.message);
+        this.consoleMessages.push({
+          message: data.data,
+          isEnemy: true,
+        });
       });
     });
     await db.decks.toArray().then(res => {
@@ -108,7 +119,10 @@ export class PlayScreenComponent {
 
   pushMessage(message: string) {
     if (this.canSendMessage) {
-      this.consoleMessages.push(message);
+      this.consoleMessages.push({
+        message: message,
+        isEnemy: false
+      });
       this.canSendMessage = false;
       this.currentRoom.send("send-message", { data: message });
       setTimeout(() => this.canSendMessage = true, 5000);
