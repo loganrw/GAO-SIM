@@ -73,7 +73,8 @@ export class LobbyComponent {
         }
       });
     });
-    if (!this.matcher.getAllMatches(this.roomName).length && this.roomName && !(this.roomName === '') && this.validRoomName) {
+    if (!this.matcher.getAllMatches(this.roomName).length && this.roomName && !(this.roomName === '')) {
+      this.validRoomName = true;
       this.client.http.post("/create_room", {
         body: {
           roomName: this.roomName,
@@ -139,7 +140,6 @@ export class LobbyComponent {
     this.decksQuery.subscribe(decks => {
       this.decks = decks;
       if (this.decks[0].isValid) {
-        console.log("selected valid deck!", console.log(this.decks[0]))
         this.selectedDeck = this.decks[0];
         localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0]?.name));
       }
