@@ -74,6 +74,7 @@
             <div class="w-3/4">
                 <div class="flex flex-row w-full hover:cursor-pointer" *ngFor="let room of roomList|slice: (paginator.pageIndex*paginator.pageSize):((paginator.pageIndex+1)*paginator.pageSize)">
                     <div
+                        (click)="joinRoom(room)"
                         class="rounded-md flex flex-row bg-white text-emerald-600 p-4 mt-1 mb-1 w-full hover:bg-slate-200 border-gray-600 shadow-md border-2 w-full">
                         <span class="text-left ml-2 w-5/6" matTooltip="Join room">{{room.name}}</span>
                         <span class="text-left ml-2 w-5/6" matTooltip="Join room">TEST</span>
