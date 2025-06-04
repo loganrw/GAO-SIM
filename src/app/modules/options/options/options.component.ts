@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import {
+  DataSet,
   RegExpMatcher,
   englishDataset,
   englishRecommendedTransformers,
+  pattern,
 } from 'obscenity';
 
 @Component({
@@ -11,12 +13,14 @@ import {
   styleUrl: './options.component.scss'
 })
 export class OptionsComponent {
-
+  badWordsDataset = new DataSet().addAll(englishDataset)
+    .addPhrase((phrase) => phrase.addPattern(pattern`|wetback|`))
+    .addPhrase((phrase) => phrase.addPattern(pattern`|coon|`));
   playerName: string | null;
   newPlayerName: string;
   validInput: boolean = true;
   matcher = new RegExpMatcher({
-    ...englishDataset.build(),
+    ...this.badWordsDataset.build(),
     ...englishRecommendedTransformers,
   });
   headerLinks = ['home', 'play', 'decks'];
