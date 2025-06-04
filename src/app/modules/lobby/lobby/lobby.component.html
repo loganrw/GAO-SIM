@@ -10,8 +10,8 @@
                 <span class="text-white text-lg mt-2 underline">Selected Deck</span>
                 <div class="flex flex-col items-left text-center w-[95%]">
                     <mat-form-field>
-                        <mat-select (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck"
-                            [formControl]="deckSelect" aria-placeholder="Select a deck">
+                        <mat-select placeholder="Select a deck.." (selectionChange)="selectDeck($event)" [(ngModel)]="selectedDeck"
+                            [formControl]="deckSelect">
                             @for (deck of decks; track deck) {
                             <mat-option [value]="deck" class="text-white">{{deck?.name}}<mat-icon *ngIf="!checkValidDeck(deck)" class="ml-auto text-red-700"
                                 matTooltip="Decks must contain a level 0 champion and at least 60 cards!">error</mat-icon></mat-option>

@@ -59,7 +59,7 @@ export class LobbyComponent {
   }
 
   createRoom() {
-    if (!this.selectedDeck.isValid) {
+    if (!this.selectedDeck?.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -91,7 +91,7 @@ export class LobbyComponent {
   }
 
   joinRoom(room: Room) {
-    if (!this.selectedDeck.isValid) {
+    if (!this.selectedDeck?.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -100,7 +100,7 @@ export class LobbyComponent {
   }
 
   joinPrivateRoom() {
-    if (!this.selectedDeck.isValid) {
+    if (!this.selectedDeck?.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
@@ -128,7 +128,7 @@ export class LobbyComponent {
   }
 
   joinAiGame() {
-    if (!this.selectedDeck.isValid) {
+    if (!this.selectedDeck?.isValid) {
       this.showPopup = true;
       this.popupMessage = "Select or create a deck before joining a game.";
       return;
