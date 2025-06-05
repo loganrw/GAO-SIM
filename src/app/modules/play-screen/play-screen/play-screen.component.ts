@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Inject, inject, Input, ViewChild } from '@angular/core';
 import { db } from '../../../services/database/database.service';
 import { liveQuery } from 'dexie';
 import { Deck } from '../../../models/deck';
@@ -8,6 +8,15 @@ import { RoutingService } from '../../../services/routing/routing.service';
 import { Client, getStateCallbacks, Room } from 'colyseus.js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameManager } from '../../../services/multiplayer/game-manager';
+import {
+  MAT_SNACK_BAR_DATA,
+  MatSnackBar,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel,
+  MatSnackBarRef,
+} from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 interface Message {
   message: string,
@@ -20,8 +29,10 @@ interface Message {
   styleUrls: ['./play-screen.component.scss']
 })
 export class PlayScreenComponent {
-
-
+  // Snack Bar
+  private _snackBar = inject(MatSnackBar);
+  durationInSeconds = 5;
+  // Room logic
   decksQuery = liveQuery(() => db.decks.toArray());
   client = new Client('https://155-138-239-22.colyseus.dev');
   currentRoom: Room;
@@ -44,6 +55,7 @@ export class PlayScreenComponent {
   playerName: string;
   isP1: boolean = false;
   canSendMessage: boolean = true;
+  enemyName: string;
 
   constructor(private routerService: RoutingService, private aRoute: ActivatedRoute, private gameManager: GameManager) { }
 
@@ -59,7 +71,12 @@ export class PlayScreenComponent {
         message: this.playerName + " joined the room!",
         isEnemy: false,
       });
-      this.currentRoom.send("send-message", { data: this.playerName + " joined the room!" });
+      this.currentRoom.send("send-message", {
+        data: {
+          message: this.playerName + " joined the room!",
+          playerName: this.playerName
+        }
+      });
       const $ = getStateCallbacks(this.currentRoom);
       $(this.currentRoom.state)['players'].onAdd((player, sessionId) => {
         if (this.currentRoom.state.p1Id === sessionId) {
@@ -69,8 +86,9 @@ export class PlayScreenComponent {
         }
       });
       this.currentRoom.onMessage("message-sent", (data) => {
+        this.openSnackBar(data.data.playerName);
         this.consoleMessages.push({
-          message: data.data,
+          message: data.data.message,
           isEnemy: true,
         });
       });
@@ -128,6 +146,15 @@ export class PlayScreenComponent {
     this.currentCard = card;
   }
 
+  openSnackBar(playerName: string) {
+    this._snackBar.openFromComponent(PizzaPartyAnnotatedComponent, {
+      duration: this.durationInSeconds * 1000,
+      panelClass: ['play-snackbar'],
+      verticalPosition: "top",
+      data: playerName
+    });
+  }
+
   pushMessage(message: string) {
     if (this.canSendMessage) {
       this.consoleMessages.push({
@@ -165,4 +192,18 @@ export class PlayScreenComponent {
     })
   }
 
+}
+
+@Component({
+  selector: 'play-snackbar',
+  template: `
+    <span matSnackBarLabel>
+        <span class="w-100 rounded-md text-white font-bold text-center">{{data}} joined the room!</span>
+    </span>`,
+  imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
+  standalone: true
+})
+export class PizzaPartyAnnotatedComponent {
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
+  snackBarRef = inject(MatSnackBarRef);
 }

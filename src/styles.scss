@@ -56,3 +56,8 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.play-snackbar {
+  --mdc-snackbar-container-color: #2F7AB1 !important;
+  text-align: center !important;
+}

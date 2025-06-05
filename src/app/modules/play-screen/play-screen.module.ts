@@ -14,7 +14,6 @@ import { GraveyardComponent } from '../../components/graveyard/graveyard.compone
 import { BanishZoneComponent } from '../../components/banish-zone/banish-zone.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PopupModalComponent } from '../../components/popup-modal/popup-modal.component';
 
 
 @NgModule({
