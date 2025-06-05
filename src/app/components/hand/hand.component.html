@@ -1,3 +1,3 @@
 <div *ngFor="let card of cards" class="px-1">
-        <img [src]="getCardURL(card.image)" (mouseenter)="returnCurrentCard(card)" class="hover:border-2 hover:border-ga-blue hover:border-solid rounded-md">
+        <img [src]="getCardURL(card.image)" draggable="false" (mouseenter)="returnCurrentCard(card)" class="hover:border-2 hover:border-ga-blue hover:border-solid rounded-md">
 </div>
