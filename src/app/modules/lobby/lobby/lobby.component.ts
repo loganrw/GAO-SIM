@@ -139,7 +139,7 @@ export class LobbyComponent {
   loadDecks() {
     this.decksQuery.subscribe(decks => {
       this.decks = decks;
-      if (this.decks[0].isValid) {
+      if (this.decks[0]?.isValid) {
         this.selectedDeck = this.decks[0];
         localStorage.setItem('selectedDeck', JSON.stringify(this.decks[0]?.name));
       }

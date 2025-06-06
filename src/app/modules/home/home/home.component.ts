@@ -80,6 +80,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  playAudio() {
+    let audio = new Audio();
+    audio.src = './assets/button-hover.mp3';
+    audio.load();
+    audio.play();
+  }
+
   navigateToPage(page: string) {
     this.routerService.navigateToPage(page);
   }
