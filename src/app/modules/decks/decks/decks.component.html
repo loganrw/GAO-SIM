@@ -70,6 +70,9 @@
                                         <hr>
                                         <span class="mt-2 text-lg text-emerald-700 underline mb-2">Main Deck</span>
                                         <p class="text-emerald-700" *ngFor="let card of deck.main">{{card.name}}</p>
+                                        <hr>
+                                        <span class="mt-2 text-lg text-emerald-700 underline mb-2">Side Deck</span>
+                                        <p class="text-emerald-700" *ngFor="let card of deck.side">{{card.name}}</p>
                                     </div>
                                 </mat-expansion-panel>
                             </mat-accordion>
@@ -115,6 +118,20 @@
                                         <span class="ml-2 mt-2 text-sm">{{trimCardName(card)}}</span>
                                         <mat-icon class="text-red-700 hover:text-red-600 ml-4"
                                             (click)="removeCard(card, 'material')">cancel</mat-icon>
+                                    </div>
+                                </span>
+                            </div>
+                            <span class="text-emerald-700 mt-2">Side Deck</span><span
+                                class="ml-2 text-emerald-700">{{sideDeckCount}} /
+                                15</span>
+                            <div *ngFor="let card of sideDeckDisplay; let i = index" class="flex flex-row w-full">
+                                <span class="text-emerald-700 text-center">
+                                    <div class="flex items-center">
+                                        <span
+                                            class="bg-emerald-700 text-white border-r border-solid rounded-md px-4 ml-4">{{countsSide[i]}}</span>
+                                        <span class="ml-2 mt-2 text-sm">{{trimCardName(card)}}</span>
+                                        <mat-icon class="text-red-700 hover:text-red-600 ml-4"
+                                            (click)="removeCard(card, 'side')">cancel</mat-icon>
                                     </div>
                                 </span>
                             </div>
@@ -206,6 +223,9 @@
                                     <button *ngIf="isCreatingDeck" (click)="addToDeck(card)"
                                         class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-emerald-600 hover:to-emerald-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-emerald-700 to-emerald-800 text-white">+
                                         Add to Deck</button>
+                                    <button *ngIf="isCreatingDeck" (click)="addToSideDeck(card)"
+                                        class="mt-4 rounded-full  hover:bg-gradient-to-t hover:from-sky-600 hover:to-sky-700 border border-gray-300 px-4 py-2 bg-gradient-to-t from-sky-700 to-sky-800 text-white">+
+                                        Add to Side Deck</button>
                                 </div>
                             </div>
                         </div>

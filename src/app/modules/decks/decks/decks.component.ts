@@ -52,15 +52,20 @@ export class DecksComponent implements OnInit {
   //Deck Creation
   mainDeck: Card[] = [];
   materialDeck: Card[] = [];
+  sideDeck: Card[] = [];
   isCreatingDeck: boolean = false;
   mainDeckDisplayCount: CardCount = {};
   materialDeckDisplayCount: CardCount = {};
+  sideDeckDisplayCount: CardCount = {};
   mainDeckDisplay: string[] = [];
   materialDeckDisplay: string[] = [];
+  sideDeckDisplay: string[] = [];
   countsMaterial: number[] = [];
   countsMain: number[] = [];
+  countsSide: number[] = [];
   mainDeckCount: number = 0;
   materialDeckCount: number = 0;
+  sideDeckCount: number = 0;
   // Track card elements to make sure the player only uses elements for their champion. normal element is always activated
   activeCardElements: string[] = ["NORM"];
   deckName: string = '';
@@ -186,6 +191,30 @@ export class DecksComponent implements OnInit {
     }
   }
 
+  addToSideDeck(card: Card) {
+    let sideDeckCost = (card.types.includes("CHAMPION") || card.types.includes("REGALIA")) ? 3 : 1;
+    if (this.sideDeckCount < 15 && (this.sideDeckCount + sideDeckCost < 15) && this.sideDeck.length < 15) {
+      this.sideDeck.push(card);
+      this.sideDeckCount += sideDeckCost;
+    }
+    this.updateSideDeckDisplay();
+  }
+
+  updateSideDeckDisplay() {
+    this.sideDeckDisplayCount = this.countDuplicates(this.sideDeck);
+    this.sideDeckDisplay = Object.keys(this.sideDeckDisplayCount);
+    this.countsSide = Object.values(this.sideDeckDisplayCount);
+  }
+
+  getSideDeckTotal(): number {
+    let sideDeckTotal = 0;
+    this.sideDeck.forEach(card => {
+      let sideDeckCost = (card.types.includes("CHAMPION") || card.types.includes("REGALIA")) ? 3 : 1;
+      sideDeckTotal += sideDeckCost;
+    })
+    return sideDeckTotal;
+  }
+
   updateMainDeckDisplay() {
     this.mainDeckDisplayCount = this.countDuplicates(this.mainDeck);
     this.mainDeckDisplay = Object.keys(this.mainDeckDisplayCount);
@@ -206,6 +235,7 @@ export class DecksComponent implements OnInit {
     if (this.isEditingDeck) {
       this.mainDeck = this.originalDeck.main;
       this.materialDeck = this.originalDeck.material;
+      this.sideDeck = this.originalDeck.side;
       this.newDeckName = this.deckName;
       this.saveDeck();
     } else {
@@ -218,12 +248,15 @@ export class DecksComponent implements OnInit {
   resetDeckChoices() {
     this.mainDeck = [];
     this.materialDeck = [];
+    this.sideDeck = [];
     this.countsMain = [];
     this.countsMaterial = [];
     this.mainDeckDisplay = [];
     this.materialDeckDisplay = [];
+    this.sideDeckDisplay = [];
     this.mainDeckCount = 0;
     this.materialDeckCount = 0;
+    this.sideDeckCount = 0;
   }
 
   countDuplicates(arr: Card[]) {
@@ -263,6 +296,7 @@ export class DecksComponent implements OnInit {
       name: deckName,
       main: this.mainDeck,
       material: this.materialDeck,
+      side: this.sideDeck,
       isValid: false,
     };
     deck.isValid = this.checkValidDeck(deck);
@@ -272,6 +306,7 @@ export class DecksComponent implements OnInit {
           name: deckName,
           main: this.mainDeck,
           material: this.materialDeck,
+          side: this.sideDeck,
           isValid: deck.isValid,
         });
         this.isEditingDeck = false;
@@ -292,11 +327,14 @@ export class DecksComponent implements OnInit {
     this.originalDeck = structuredClone(deck);
     this.mainDeck = deck.main;
     this.materialDeck = deck.material;
+    this.sideDeck = deck.side;
     this.deckName = deck.name;
     this.mainDeckCount = this.mainDeck.length;
     this.materialDeckCount = this.materialDeck.length;
+    this.sideDeckCount = this.getSideDeckTotal();
     this.updateMainDeckDisplay();
     this.updateMatDeckDisplay();
+    this.updateSideDeckDisplay();
     this.isCreatingDeck = true;
     this.isEditingDeck = true;
   }
@@ -318,6 +356,18 @@ export class DecksComponent implements OnInit {
       this.materialDeck = this.materialDeck.filter(card => card !== foundCard);
       this.materialDeckCount--;
       this.updateMatDeckDisplay();
+    } else if (deck === 'side') {
+      let index;
+      let foundCard = this.sideDeck.find(card => card.name.toLowerCase() == this.trimCardName(cardName.toLowerCase()));
+      if (foundCard) {
+        index = this.sideDeck.indexOf(foundCard, 0);
+        this.sideDeck.splice(index, 1);
+        let sideDeckCost = (foundCard?.types.includes("CHAMPION") || foundCard?.types.includes("REGALIA")) ? 3 : 1;
+        this.sideDeckCount -= sideDeckCost;
+        this.sideDeckDisplayCount = this.countDuplicates(this.sideDeck);
+        if (foundCard && !this.sideDeck[foundCard.name as any]) this.sideDeckDisplay = Object.keys(this.sideDeckDisplayCount);
+        this.countsSide = Object.values(this.sideDeckDisplayCount);
+      }
     }
   }
 
@@ -351,6 +401,7 @@ export class DecksComponent implements OnInit {
       name: 'TEST',
       main: [],
       material: [],
+      side: [],
       isValid: false,
     };
     let dialogRef = this.dialog.open(ImportModalComponent, {
@@ -362,24 +413,30 @@ export class DecksComponent implements OnInit {
     dialogRef.afterClosed().subscribe(deckList => {
       if (deckList && deckList !== '') {
         let result = this.importService.parseInput(deckList);
-        let cardNames = Object.keys(result);
-        let cardCounts = Object.values(result);
-        cardCounts.forEach((count, idx) => {
-          for (let i = 0; i < Number(count); i++) {
-            let card = this.importService.getCard(cardNames[idx]);
-            if (card.cost_memory !== null) {
-              importedDeck.material.push(card)
-            } else {
-              importedDeck.main.push(card);
-            }
-          }
-        });
+        let material = this.parseImportedDeck(result.materialDeck);
+        let main = this.parseImportedDeck(result.mainDeck);
+        let side = this.parseImportedDeck(result.sideDeck);
+        importedDeck.main = main;
+        importedDeck.material = material;
+        importedDeck.side = side;
         this.materialDeck = importedDeck.material;
         this.mainDeck = importedDeck.main;
+        this.sideDeck = importedDeck.side;
         this.deckName = importedDeck.material[0].name;
         this.saveDeck();
       }
     });
+  }
+
+  parseImportedDeck(cards: any) {
+    let result: Card[] = [];
+    cards.forEach((card: any) => {
+      let cardName = Object.keys(card)[0];
+      let cardCount: number = Object.values(card)[0] as number;
+      let foundCard = this.importService.getCard(cardName);
+      for (let i = 0; i < cardCount; i++) result.push(foundCard);
+    });
+    return result;
   }
 
   showCardInfo(card: Card, altImage: Blob | null) {
