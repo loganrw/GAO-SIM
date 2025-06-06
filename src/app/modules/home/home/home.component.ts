@@ -5,7 +5,6 @@ import { CardService } from '../../../services/card-service/card-service.service
 import { CardResponse } from '../../../models/card-response';
 import { db } from '../../../services/database/database.service';
 import { liveQuery } from 'dexie';
-import { forkJoin, mergeMap, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +17,7 @@ export class HomeComponent implements OnInit {
   percentLoaded = 0;
   loadedCount = 0;
   loaded = false;
+  clickedStart = false;
   cardQuery = liveQuery(() => db.card.toArray());
 
   constructor(public routerService: RoutingService, private cardService: CardService, private changeRef: ChangeDetectorRef) { }
@@ -78,6 +78,10 @@ export class HomeComponent implements OnInit {
         this.loaded = true;
       }
     });
+  }
+
+  checkStart(event: any) {
+    if (event.button === 0 && !this.clickedStart) this.clickedStart = true;
   }
 
   playAudio() {
