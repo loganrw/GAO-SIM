@@ -19,8 +19,11 @@ export class HomeComponent implements OnInit {
   loaded = false;
   clickedStart = false;
   cardQuery = liveQuery(() => db.card.toArray());
+  audio = new Audio();
 
-  constructor(public routerService: RoutingService, private cardService: CardService, private changeRef: ChangeDetectorRef) { }
+  constructor(public routerService: RoutingService, private cardService: CardService, private changeRef: ChangeDetectorRef) {
+    this.audio.src = './assets/button-hover.mp3';
+  }
 
   async ngOnInit() {
     await db.card.count().then(count => {
@@ -85,10 +88,8 @@ export class HomeComponent implements OnInit {
   }
 
   playAudio() {
-    let audio = new Audio();
-    audio.src = './assets/button-hover.mp3';
-    audio.load();
-    audio.play();
+    this.audio.load();
+    this.audio.play();
   }
 
   navigateToPage(page: string) {
