@@ -100,8 +100,7 @@ export class PlayScreenComponent {
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
-        console.log("P1", data.player1First);
-        if (data.player1First) {
+        if (data.player1First && this.isP1) {
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
