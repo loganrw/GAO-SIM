@@ -203,6 +203,7 @@ export class PlayScreenComponent {
         }
       });
       this.canSendMessage = false;
+      if (this.emojiChat) this.emojiChat = false;
     }
     setTimeout(() => this.canSendMessage = true, 5000);
   }

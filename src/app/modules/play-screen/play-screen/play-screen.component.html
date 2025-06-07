@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="bottom-0 absolute rounded-md bg-white w-[95%]">
-                <div *ngIf="!emojiChat" (click)="emojiChat = false" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
+                <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
                     <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!', false)"
                         class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it
                         On!</button>
