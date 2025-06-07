@@ -100,14 +100,14 @@ export class PlayScreenComponent {
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
-        if (data.data.player1First) {
+        console.log("P1", data.player1First);
+        if (data.player1First) {
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
               excludeClient: false
             }
           });
-          this.openSnackBar("You go first!");
           this.isPlayersTurn = true;
           this.isEnemyTurn = false;
         } else {
