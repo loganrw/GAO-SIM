@@ -59,8 +59,14 @@
                     style="width: 100%">{{playerLife}}</div>
             </div>
             <app-main-deck class="absolute xl:bottom-[185px] right-[-76px] bottom-[185px]"></app-main-deck>
-            <app-material-deck
-                class="absolute xl:left-[230px] xl:bottom-[160px] left-[237px] bottom-[185px]"></app-material-deck>
+            <img  id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg" class="h-[18%] border-4 border-transparent hover:border-ga-blue rounded-md absolute xl:left-[235px] xl:bottom-[185px] left-[237px] bottom-[185px]">
+            <div *ngIf="isViewingMatDeck">
+                <div id="matView" class="border border-8 px-4 border-solid border-ga-blue w-3/4 h-3/4 bg-slate-200 rounded-md flex flex-col absolute justify-center items-center top-20 left-[10%] grid grid-cols-6 grid-rows-2 gap-8">
+                    <div *ngFor="let card of selectedDeck.material">
+                        <img id="matView" [src]="getCardURL(card.image)" draggable="false" class="border-4 border-transparent hover:border-ga-blue mt-2 rounded-md shadow-xl">
+                    </div>
+                </div>
+            </div>
             <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
                 (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : 'bottom-[-275px]'"
                 class="left-[8%] fixed overflow-hidden flex flex-row w-[85%]"></app-hand>

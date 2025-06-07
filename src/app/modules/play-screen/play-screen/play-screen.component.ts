@@ -40,8 +40,6 @@ export class PlayScreenComponent {
   roomName: string;
   decks: Deck[] = [];
   selectedDeck: Deck;
-  mainDeck: Card[];
-  materialDeck: Card[];
   loaded = false;
   hand: Card[];
   currentCard: Card;
@@ -56,6 +54,7 @@ export class PlayScreenComponent {
   isP1: boolean = false;
   canSendMessage: boolean = true;
   enemyName: string;
+  isViewingMatDeck: boolean = false;
 
   constructor(private routerService: RoutingService, private aRoute: ActivatedRoute, private gameManager: GameManager) { }
 
@@ -95,6 +94,7 @@ export class PlayScreenComponent {
     });
     await db.decks.toArray().then(res => {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
+      console.log(this.selectedDeck);
       this.shuffleDeck();
       this.drawCard(7);
     });
@@ -117,7 +117,7 @@ export class PlayScreenComponent {
   }
 
   viewMaterialDeck() {
-
+    this.isViewingMatDeck = !this.isViewingMatDeck;
   }
 
   playAudio(src: string) {
@@ -167,10 +167,17 @@ export class PlayScreenComponent {
     }
   }
 
-  @HostListener('contextmenu')
-  showCardInfo() {
-    this.drawer.toggle();
-    return false;
+  // @HostListener('contextmenu')
+  // showCardInfo() {
+  //   this.drawer.toggle();
+  //   return false;
+  // }
+
+  @HostListener('click', ['$event'])
+  toggleMatDeck(event: any) {
+    const clickedElement = event.target as HTMLElement;
+    console.log(clickedElement.id);
+    if (!(clickedElement.id == 'matDeck' || clickedElement.id == 'matView')) this.isViewingMatDeck = false;
   }
 
   toggleConsole() {
