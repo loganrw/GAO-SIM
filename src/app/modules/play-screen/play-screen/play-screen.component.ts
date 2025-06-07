@@ -53,8 +53,11 @@ export class PlayScreenComponent {
   playerName: string;
   isP1: boolean = false;
   canSendMessage: boolean = true;
-  enemyName: string;
   isViewingMatDeck: boolean = false;
+  enemyJoined: boolean = false;
+  // Turn ordering
+  isPlayersTurn: boolean;
+  isEnemyTurn: boolean;
 
   constructor(private routerService: RoutingService, private aRoute: ActivatedRoute, private gameManager: GameManager) { }
 
@@ -73,7 +76,8 @@ export class PlayScreenComponent {
       this.currentRoom.send("send-message", {
         data: {
           message: this.playerName + " joined the room!",
-          playerName: this.playerName
+          playerName: this.playerName,
+          excludeClient: true
         }
       });
       const $ = getStateCallbacks(this.currentRoom);
@@ -82,14 +86,35 @@ export class PlayScreenComponent {
           this.isP1 = true;
         } else {
           this.playAudio("./assets/room-join.mp3");
+          setTimeout(() => this.currentRoom.send("get-first-turn"), 1000);
+          this.enemyJoined = true;
         }
       });
       this.currentRoom.onMessage("message-sent", (data) => {
-        this.openSnackBar(data.data.playerName);
+        if (!this.enemyJoined) {
+          this.openSnackBar(data.data.playerName + " joined the Room!");
+        }
         this.consoleMessages.push({
           message: data.data.message,
           isEnemy: true,
         });
+      });
+      this.currentRoom.onMessage("turn-order", (data) => {
+        if (data.player1First) {
+          this.currentRoom.send("send-message", {
+            data: {
+              message: this.playerName + " goes first!",
+              excludeClient: false
+            }
+          });
+          this.openSnackBar("You go first!");
+          this.isPlayersTurn = true;
+          this.isEnemyTurn = false;
+        } else {
+          this.openSnackBar("Enemy goes first!");
+          this.isPlayersTurn = false;
+          this.isEnemyTurn = true;
+        }
       });
     });
     await db.decks.toArray().then(res => {
@@ -146,12 +171,12 @@ export class PlayScreenComponent {
     this.currentCard = card;
   }
 
-  openSnackBar(playerName: string) {
-    this._snackBar.openFromComponent(PizzaPartyAnnotatedComponent, {
+  openSnackBar(message: string) {
+    this._snackBar.openFromComponent(SnackBarComponent, {
       duration: this.durationInSeconds * 1000,
       panelClass: ['play-snackbar'],
       verticalPosition: "top",
-      data: playerName
+      data: message
     });
   }
 
@@ -159,10 +184,15 @@ export class PlayScreenComponent {
     if (this.canSendMessage) {
       this.consoleMessages.push({
         message: message,
-        isEnemy: false
+        isEnemy: false,
       });
       this.canSendMessage = false;
-      this.currentRoom.send("send-message", { data: message });
+      this.currentRoom.send("send-message", {
+        data: {
+          message: message,
+          excludeClient: true
+        }
+      });
       setTimeout(() => this.canSendMessage = true, 5000);
     }
   }
@@ -207,12 +237,12 @@ export class PlayScreenComponent {
   selector: 'play-snackbar',
   template: `
     <span matSnackBarLabel>
-        <span class="w-100 rounded-md text-white font-bold text-center">{{data}} joined the room!</span>
+        <span class="w-100 rounded-md text-white font-bold text-center">{{data}}</span>
     </span>`,
   imports: [MatButtonModule, MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
   standalone: true
 })
-export class PizzaPartyAnnotatedComponent {
+export class SnackBarComponent {
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
   snackBarRef = inject(MatSnackBarRef);
 }
