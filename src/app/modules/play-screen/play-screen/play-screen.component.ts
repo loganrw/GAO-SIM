@@ -101,6 +101,7 @@ export class PlayScreenComponent {
       });
       this.currentRoom.onMessage("turn-order", (data) => {
         if (data.player1First && this.isP1) {
+          console.log("P1 FIRST " + data.player1First, "IS P1 " + this.isP1);
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
@@ -118,7 +119,6 @@ export class PlayScreenComponent {
     });
     await db.decks.toArray().then(res => {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
-      console.log(this.selectedDeck);
       this.shuffleDeck();
       this.drawCard(7);
     });
