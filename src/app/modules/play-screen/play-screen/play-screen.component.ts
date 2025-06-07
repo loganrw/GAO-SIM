@@ -100,7 +100,7 @@ export class PlayScreenComponent {
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
-        if (data.player1First) {
+        if (data.data.player1First) {
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
@@ -206,7 +206,6 @@ export class PlayScreenComponent {
   @HostListener('click', ['$event'])
   toggleMatDeck(event: any) {
     const clickedElement = event.target as HTMLElement;
-    console.log(clickedElement.id);
     if (!(clickedElement.id == 'matDeck' || clickedElement.id == 'matView')) this.isViewingMatDeck = false;
   }
 
