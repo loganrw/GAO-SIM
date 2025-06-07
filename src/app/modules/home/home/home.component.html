@@ -9,7 +9,7 @@
         <button (click)="navigateToPage('options')"
             class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110" (mouseenter)="playAudio()">OPTIONS</button>
     </div>
-    <div *ngif="!loaded">
+    <div *ngif="!loaded && !clickedStart">
             <div class="absolute top-0 flex flex-col gap-4 top-3/4">
             <span class="text-emerald-700 text-3xl">Initializing card database...</span>
                 <mat-progress-bar [value]="percentLoaded"></mat-progress-bar>

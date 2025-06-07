@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, Inject, inject, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, inject, Input, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { db } from '../../../services/database/database.service';
 import { liveQuery } from 'dexie';
 import { Deck } from '../../../models/deck';
@@ -20,7 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 interface Message {
   message: string,
-  isEnemy: boolean
+  isEnemy: boolean,
+  isImage: boolean
 }
 
 @Component({
@@ -55,9 +56,12 @@ export class PlayScreenComponent {
   canSendMessage: boolean = true;
   isViewingMatDeck: boolean = false;
   enemyJoined: boolean = false;
+  emojiChat: boolean = false;
   // Turn ordering
   isPlayersTurn: boolean;
   isEnemyTurn: boolean;
+
+  @ViewChildren("chatDiv") chatDiv: QueryList<ElementRef>;
 
   constructor(private routerService: RoutingService, private aRoute: ActivatedRoute, private gameManager: GameManager) { }
 
@@ -72,6 +76,7 @@ export class PlayScreenComponent {
       this.consoleMessages.push({
         message: this.playerName + " joined the room!",
         isEnemy: false,
+        isImage: false
       });
       this.currentRoom.send("send-message", {
         data: {
@@ -97,6 +102,7 @@ export class PlayScreenComponent {
         this.consoleMessages.push({
           message: data.data.message,
           isEnemy: true,
+          isImage: data.data.isImage
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
@@ -116,6 +122,14 @@ export class PlayScreenComponent {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
       this.shuffleDeck();
       this.drawCard(7);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.chatDiv.changes.subscribe(() => {
+      if (this.chatDiv && this.chatDiv.last) {
+        this.chatDiv.last.nativeElement.focus();
+      }
     });
   }
 
@@ -174,21 +188,29 @@ export class PlayScreenComponent {
     });
   }
 
-  pushMessage(message: string) {
+  pushMessage(message: string, isImage: boolean) {
     if (this.canSendMessage) {
       this.consoleMessages.push({
         message: message,
         isEnemy: false,
+        isImage: isImage
       });
-      this.canSendMessage = false;
       this.currentRoom.send("send-message", {
         data: {
           message: message,
-          excludeClient: true
+          excludeClient: true,
+          isImage: isImage
         }
       });
-      setTimeout(() => this.canSendMessage = true, 5000);
+      this.canSendMessage = false;
     }
+    setTimeout(() => this.canSendMessage = true, 5000);
+  }
+
+  scrollTo(event: any) {
+    console.log(event);
+    let element = event.target as HTMLElement;
+    element.scrollIntoView();
   }
 
   // @HostListener('contextmenu')
