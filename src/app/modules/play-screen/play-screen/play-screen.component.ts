@@ -101,7 +101,6 @@ export class PlayScreenComponent {
       });
       this.currentRoom.onMessage("turn-order", (data) => {
         if (data.player1First && this.isP1) {
-          console.log("P1 FIRST " + data.player1First, "IS P1 " + this.isP1);
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
@@ -110,10 +109,6 @@ export class PlayScreenComponent {
           });
           this.isPlayersTurn = true;
           this.isEnemyTurn = false;
-        } else {
-          this.openSnackBar("Enemy goes first!");
-          this.isPlayersTurn = false;
-          this.isEnemyTurn = true;
         }
       });
     });
