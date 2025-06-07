@@ -1,18 +1,23 @@
 <div class="flex flex-row justify-center" (click)="checkStart($event)">
     <img src="../../../../assets/logo.jpg" draggable="false" class="min-h-screen w-full max-h-screen opacity-75 z-0">
-    <div *ngIf="loaded && !clickedStart" class="absolute font-bold text-emerald-800 top-3/4 text-3xl animate-pulse hover:cursor-pointer tracking-wider">Click to start...</div>
-    <div *ngIf="loaded && clickedStart" class="absolute top-0 flex flex-col gap-4 top-3/4">
-        <button (click)="navigateToPage('lobby')"
-            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110" (mouseenter)="playAudio()">PLAY</button>
-        <button (click)="navigateToPage('decks')"
-            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110" (mouseenter)="playAudio()">DECKS</button>
-        <button (click)="navigateToPage('options')"
-            class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110" (mouseenter)="playAudio()">OPTIONS</button>
-    </div>
-    <div *ngif="!loaded && !clickedStart">
-            <div class="absolute top-0 flex flex-col gap-4 top-3/4">
-            <span class="text-emerald-700 text-3xl">Initializing card database...</span>
-                <mat-progress-bar [value]="percentLoaded"></mat-progress-bar>
+    <div *ngIf="loaded; else notLoaded" class="absolute top-0 top-3/4">
+        <div *ngIf="!clickedStart" class="font-bold text-emerald-800 w-full text-3xl animate-pulse hover:cursor-pointer tracking-wider"><span>Click to start...</span></div>
+        <div *ngIf="clickedStart" class="flex flex-col gap-4">
+            <button (click)="navigateToPage('lobby')"
+                class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110"
+                (mouseenter)="playAudio()">PLAY</button>
+            <button (click)="navigateToPage('decks')"
+                class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110"
+                (mouseenter)="playAudio()">DECKS</button>
+            <button (click)="navigateToPage('options')"
+                class="text-white bg-gradient-to-t from-emerald-700 to-emerald-800 rounded-md border border-gray-400 px-40 py-1 shadow-lg hover:scale-110"
+                (mouseenter)="playAudio()">OPTIONS</button>
         </div>
     </div>
+    <ng-template #notLoaded>
+        <div class="absolute top-0 flex flex-col gap-4 top-3/4">
+            <span class="text-emerald-700 text-3xl">Initializing card database...</span>
+            <mat-progress-bar [value]="percentLoaded"></mat-progress-bar>
+        </div>
+    </ng-template>
 </div>
