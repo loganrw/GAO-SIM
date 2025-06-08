@@ -65,7 +65,7 @@
                 <div id="matView"
                     class="border border-8 px-4 border-solid border-ga-blue w-3/4 h-3/4 bg-slate-200 rounded-md flex flex-col absolute justify-center items-center top-20 left-[10%] grid grid-cols-6 grid-rows-2 gap-8">
                     <div *ngFor="let card of selectedDeck.material">
-                        <img id="matView" [src]="getCardURL(card.image)" draggable="false"
+                        <img (mouseenter)="setCurrentCard(card)" id="matView" [src]="getCardURL(card.image)" draggable="false"
                             class="border-4 border-transparent hover:border-ga-blue mt-2 rounded-md shadow-xl">
                     </div>
                 </div>
@@ -90,81 +90,81 @@
                         </div>
                 </div>
             </div>
-            <div class="bottom-0 absolute rounded-md bg-white w-[95%]">
-                <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!', false)"
-                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it
-                        On!</button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('Nice Play.', false)"
-                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Nice
-                        Play.</button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('Good Game.', false)"
-                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Good
-                        Game.</button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('Oops!', false)"
-                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Oops!</button>
-                </div>
-                <!-- Emoji Chat -->
-                <div *ngIf="emojiChat" class="grid grid-cols-4 grid-rows-4 gap-8 mb-4 p-2">
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/dc.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/dc.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/diari.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/diari.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/geni.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/geni.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/kmgj.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/kmgj.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/lor.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/lor.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/mertri.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/mertri.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/nico.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/nico.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/pol.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/pol.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/rai.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/rai.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/sil.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/sil.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/tony.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/tony.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/vani.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/vani.png">
-                    </button>
-                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/zan.png', true)"
-                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/zan.png">
-                    </button>
-                </div>
-                <div class="mt-2 grid grid-cols-2 grid-rows-1 flex items-center">
-                    <button class="rounded-md bg-slate-200 p-2 mr-1 ml-2" (click)="emojiChat = false"><mat-icon
-                            class="text-ga-blue">chat_bubble</mat-icon></button>
-                    <button class="rounded-md bg-slate-200 p-2 ml-1 mr-2" (click)="emojiChat = true"><mat-icon
-                            class="text-ga-blue">mood</mat-icon></button>
-                </div>
+        </div>
+        <div class="bottom-0 absolute rounded-md bg-white w-full">
+            <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
+                <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!', false)"
+                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it
+                    On!</button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('Nice Play.', false)"
+                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Nice
+                    Play.</button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('Good Game.', false)"
+                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Good
+                    Game.</button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('Oops!', false)"
+                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Oops!</button>
+            </div>
+            <!-- Emoji Chat -->
+            <div *ngIf="emojiChat" class="grid grid-cols-4 grid-rows-4 gap-8 mb-4 p-2">
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/dc.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/dc.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/diari.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/diari.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/geni.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/geni.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/kmgj.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/kmgj.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/lor.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/lor.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/mertri.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/mertri.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/nico.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/nico.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/pol.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/pol.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/rai.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/rai.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/sil.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/sil.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/tony.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/tony.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/vani.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/vani.png">
+                </button>
+                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/zan.png', true)"
+                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                    <img class="cover w-full h-full" src="./assets/emoji/zan.png">
+                </button>
+            </div>
+            <div class="mt-2 grid grid-cols-2 grid-rows-1 flex items-center">
+                <button class="rounded-md bg-slate-200 p-2 mr-1 ml-2" (click)="emojiChat = false"><mat-icon
+                        class="text-ga-blue">chat_bubble</mat-icon></button>
+                <button class="rounded-md bg-slate-200 p-2 ml-1 mr-2" (click)="emojiChat = true"><mat-icon
+                        class="text-ga-blue">mood</mat-icon></button>
             </div>
         </div>
     </mat-drawer>

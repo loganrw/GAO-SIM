@@ -87,15 +87,20 @@ export class PlayScreenComponent {
       });
       const $ = getStateCallbacks(this.currentRoom);
       $(this.currentRoom.state)['players'].onAdd((player, sessionId) => {
-        if (this.currentRoom.state.p1Id === sessionId) {
+        if (!this.currentRoom.state.p2Id) {
           this.isP1 = true;
         } else {
           this.playAudio("./assets/room-join.mp3");
-          setTimeout(() => this.currentRoom.send("get-first-turn"), 1000);
+          setTimeout(() => this.currentRoom.send("get-first-turn", {
+            data: {
+              excludeClient: false
+            }
+          }), 1000);
           this.enemyJoined = true;
         }
       });
       this.currentRoom.onMessage("message-sent", (data) => {
+        console.log("got message")
         if (!this.enemyJoined) {
           this.openSnackBar(data.data.playerName + " joined the Room!");
         }
@@ -106,15 +111,18 @@ export class PlayScreenComponent {
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
-        if (data.player1First && this.isP1) {
+        if (data.firstTurn === this.currentRoom.state.p1Id && this.isP1) {
+          this.openSnackBar("You go first!")
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
-              excludeClient: false
+              excludeClient: true
             }
           });
           this.isPlayersTurn = true;
           this.isEnemyTurn = false;
+        } else {
+          this.openSnackBar("Enemy goes first!");
         }
       });
     });
@@ -122,6 +130,7 @@ export class PlayScreenComponent {
       this.selectedDeck = res.find(deck => deck.name == storedDeckName) as Deck;
       this.shuffleDeck();
       this.drawCard(7);
+      this.loaded = true;
     });
   }
 
@@ -177,6 +186,7 @@ export class PlayScreenComponent {
 
   setCurrentCard(card: Card) {
     this.currentCard = card;
+    console.log(card);
   }
 
   openSnackBar(message: string) {
@@ -214,11 +224,11 @@ export class PlayScreenComponent {
     element.scrollIntoView();
   }
 
-  // @HostListener('contextmenu')
-  // showCardInfo() {
-  //   this.drawer.toggle();
-  //   return false;
-  // }
+  @HostListener('contextmenu')
+  showCardInfo() {
+    this.drawer.toggle();
+    return false;
+  }
 
   @HostListener('click', ['$event'])
   toggleMatDeck(event: any) {
