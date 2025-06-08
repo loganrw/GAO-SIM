@@ -175,7 +175,7 @@ export class DecksComponent implements OnInit {
   }
 
   addToDeck(card: Card) {
-    if ((card.types.includes("CHAMPION") || card.types.includes("REGALIA") || card.cost_memory) && !this.materialDeck.includes(card) && this.materialDeck.length < 15) {
+    if ((card.types.includes("CHAMPION") || card.types.includes("REGALIA") || card.cost_memory) && !this.materialDeck.includes(card) && this.materialDeck.length < 12) {
       if (card.types.includes("CHAMPION")) this.activeCardElements.push(card.element);
       if (!this.materialDeckDisplayCount[JSON.stringify(card.name)]) {
         this.materialDeck.push(card);
@@ -264,7 +264,7 @@ export class DecksComponent implements OnInit {
     for (const item of arr) {
       const key = JSON.stringify(item.name);
       counts[key] = (counts[key] || 0);
-      if ((item.types.includes("CHAMPION") || item.cost_memory) && !this.materialDeck.includes(item) && this.materialDeck.length < 15 && counts[key] < 1) {
+      if ((item.types.includes("CHAMPION") || item.cost_memory) && !this.materialDeck.includes(item) && this.materialDeck.length < 12 && counts[key] < 1) {
         counts[key] += 1;
       }
       else if (counts[key] <= 3) {
