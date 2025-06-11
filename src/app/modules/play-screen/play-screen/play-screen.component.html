@@ -70,9 +70,11 @@
                     </div>
                 </div>
             </div>
-            <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
-                (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : 'bottom-[-275px]'"
-                class="left-[8%] fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
+            <div class="flex justify-center">
+                <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
+                    (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : '-bottom-1/4'"
+                    class="fixed overflow-hidden flex flex-row w-[85%] "></app-hand>
+            </div>
         </div>
         <button *ngIf="!console.opened" (click)="toggleConsole()" class="bottom-4 left-6 absolute">
             <mat-icon class="text-ga-blue">chat</mat-icon>
