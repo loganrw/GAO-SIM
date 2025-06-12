@@ -36,9 +36,9 @@ export class PlayScreenComponent {
   // Room logic
   decksQuery = liveQuery(() => db.decks.toArray());
   // PROD
-  // client = new Client('https://155-138-239-22.colyseus.dev');
+  client = new Client('https://155-138-239-22.colyseus.dev');
   //LOCAL
-  client = new Client('http://localhost:2567');
+  //client = new Client('http://localhost:2567');
   currentRoom: Room;
   roomId: string;
   roomName: string;

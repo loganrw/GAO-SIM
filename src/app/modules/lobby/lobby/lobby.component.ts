@@ -25,9 +25,9 @@ class CustomRoom extends Room {
 })
 export class LobbyComponent {
   // PROD
-  // client = new Client('https://155-138-239-22.colyseus.dev');
+  client = new Client('https://155-138-239-22.colyseus.dev');
   //LOCAL
-  client = new Client('http://localhost:2567');
+  //client = new Client('http://localhost:2567');
   roomList: CustomRoom[] = [];
   joinedRoom: Room;
   decksQuery = liveQuery(() => db.decks.toArray());
