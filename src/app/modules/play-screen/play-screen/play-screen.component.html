@@ -8,7 +8,7 @@
                     <span class="font-bold text-lg text-emerald-700">{{currentCard.name}}</span>
                     <span class="text-emerald-700 mt-2 mb-2">Element: {{currentCard.element}}</span>
                 </div>
-                <img [src]="getCardURL(currentCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
+                <img  draggable="false" [src]="getCardURL(currentCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
                 <div
                     class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
                     <span class="text-emerald-700">Memory Cost: {{currentCard.cost_memory ? currentCard.cost_memory :
@@ -57,7 +57,7 @@
                     <div
                         class="bg-zinc-900 rounded-md bottom-4 fixed w-[90%] h-[45%] 2xl:h-[47.5%] flex flex-col shadow-lg shadow-blue-500/50">
                         <div class="w-full h-full flex justify-center">
-                            <img class="w-1/2 h-1/2 rotate-180 justify-center mt-[1%]" src="./assets/sparkle.png">
+                            <img  draggable="false" class="w-1/2 h-1/2 rotate-180 justify-center mt-[1%]" src="./assets/sparkle.png">
                         </div>
                         <!-- Player HP -->
                         <div class="absolute left-[3%] top-[5%] 2xl:top-[10%]">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
                             <!-- Material Deck -->
-                            <img id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg"
+                            <img draggable="false" id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MATERIAL DECK</span>
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
-                            <img src="../../../assets/card-back.jpg"
+                            <img draggable="false" src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MAIN DECK</span>
@@ -110,7 +110,7 @@
                     <div
                         class="rotate-180 bg-zinc-900 rounded-md top-4 fixed w-[90%] h-[45%] 2xl:h-[47.5%] flex flex-col shadow-lg shadow-rose-500/50">
                         <div class="w-full h-full flex justify-center rotate-180">
-                            <img class="w-1/2 h-1/2 justify-center fixed bottom-4" src="./assets/sparkle.png">
+                            <img draggable="false" class="w-1/2 h-1/2 justify-center fixed bottom-4" src="./assets/sparkle.png">
                         </div>
                         <!-- Enemy HP -->
                         <div class="absolute left-[3%] top-[5%] 2xl:top-[10%]">
@@ -137,7 +137,7 @@
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
                             <!-- Material Deck -->
-                            <img src="../../../assets/card-back.jpg" class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
+                            <img draggable="false" src="../../../assets/card-back.jpg" class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MATERIAL DECK</span>
                             </div>
@@ -149,7 +149,7 @@
                             </div>
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
-                            <img src="../../../assets/card-back.jpg"
+                            <img draggable="false" src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MAIN DECK</span>
@@ -185,7 +185,7 @@
                         <div *ngIf="message.isImage"
                             [ngClass]="message.isEnemy ? 'mr-4 border-red-400' : 'ml-4 border-ga-blue'"
                             class="border-2 border-solid mt-2 flex flex-col items-center bg-white font-bold rounded-md p-2 w-1/4">
-                            <img class="w-24 h-24" src="{{message.message}}">
+                            <img draggable="false" class="w-24 h-24" src="{{message.message}}">
                         </div>
                         <div *ngIf="!message.isImage" [ngClass]="message.isEnemy ? 'mr-4' : 'ml-4'"
                             class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
@@ -213,55 +213,55 @@
                 <div *ngIf="emojiChat" class="grid grid-cols-4 grid-rows-4 gap-8 mb-4 p-2">
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/dc.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/dc.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/dc.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/diari.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/diari.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/diari.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/geni.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/geni.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/geni.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/kmgj.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/kmgj.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/kmgj.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/lor.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/lor.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/lor.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/mertri.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/mertri.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/mertri.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/nico.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/nico.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/nico.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/pol.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/pol.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/pol.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/rai.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/rai.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/rai.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/sil.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/sil.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/sil.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/tony.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/tony.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/tony.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/vani.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/vani.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/vani.png">
                     </button>
                     <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/zan.png', true)"
                         class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                        <img class="cover w-full h-full" src="./assets/emoji/zan.png">
+                        <img draggable="false" class="cover w-full h-full" src="./assets/emoji/zan.png">
                     </button>
                 </div>
                 <div class="mt-2 grid grid-cols-2 grid-rows-1 flex items-center">

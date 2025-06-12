@@ -35,7 +35,10 @@ export class PlayScreenComponent {
   durationInSeconds = 5;
   // Room logic
   decksQuery = liveQuery(() => db.decks.toArray());
-  client = new Client('https://155-138-239-22.colyseus.dev');
+  // PROD
+  // client = new Client('https://155-138-239-22.colyseus.dev');
+  //LOCAL
+  client = new Client('http://localhost:2567');
   currentRoom: Room;
   roomId: string;
   roomName: string;
@@ -91,16 +94,17 @@ export class PlayScreenComponent {
           this.isP1 = true;
         } else {
           this.playAudio("./assets/room-join.mp3");
-          setTimeout(() => this.currentRoom.send("get-first-turn", {
-            data: {
-              excludeClient: false
-            }
-          }), 1000);
+          setTimeout(() => {
+            this.currentRoom.send("get-first-turn", {
+              data: {
+                excludeClient: false
+              }
+            })
+          }, 1500);
           this.enemyJoined = true;
         }
       });
       this.currentRoom.onMessage("message-sent", (data) => {
-        console.log("got message")
         if (!this.enemyJoined) {
           this.openSnackBar(data.data.playerName + " joined the Room!");
         }
@@ -111,16 +115,41 @@ export class PlayScreenComponent {
         });
       });
       this.currentRoom.onMessage("turn-order", (data) => {
+        // You are player 1 and you go first
         if (data.firstTurn === this.currentRoom.state.p1Id && this.isP1) {
-          this.openSnackBar("You go first!")
+          this.openSnackBar("You go first!");
           this.currentRoom.send("send-message", {
             data: {
               message: this.playerName + " goes first!",
               excludeClient: true
             }
           });
+          this.consoleMessages.push({
+            message: "You go first!",
+            isEnemy: false,
+            isImage: false
+          });
           this.isPlayersTurn = true;
           this.isEnemyTurn = false;
+          // You are player 2 and you go first
+        } else if (data.firstTurn === this.currentRoom.state.p2Id && !this.isP1) {
+          {
+            this.openSnackBar("You go first!");
+            this.currentRoom.send("send-message", {
+              data: {
+                message: this.playerName + " goes first!",
+                excludeClient: true
+              }
+            });
+            this.consoleMessages.push({
+              message: "You go first!",
+              isEnemy: false,
+              isImage: false
+            });
+            this.isPlayersTurn = true;
+            this.isEnemyTurn = false;
+          }
+          // You do not go first
         } else {
           this.openSnackBar("Enemy goes first!");
         }
@@ -186,7 +215,6 @@ export class PlayScreenComponent {
 
   setCurrentCard(card: Card) {
     this.currentCard = card;
-    console.log(card);
   }
 
   openSnackBar(message: string) {
@@ -219,7 +247,6 @@ export class PlayScreenComponent {
   }
 
   scrollTo(event: any) {
-    console.log(event);
     let element = event.target as HTMLElement;
     element.scrollIntoView();
   }
