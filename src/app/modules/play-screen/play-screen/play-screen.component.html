@@ -1,173 +1,276 @@
-<mat-drawer-container hasBackdrop>
-    <mat-drawer #drawer mode="over" position="end" class="bg-[url('./assets/vines.png')] bg-no-repeat">
-        <div *ngIf="currentCard && loaded" class="mt-2 p-2 flex flex-col items-center w-full">
-            <div
-                class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
-                <span class="font-bold text-lg text-emerald-700">{{currentCard.name}}</span>
-                <span class="text-emerald-700 mt-2 mb-2">Element: {{currentCard.element}}</span>
-            </div>
-            <img [src]="getCardURL(currentCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
-            <div
-                class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
-                <span class="text-emerald-700">Memory Cost: {{currentCard.cost_memory ? currentCard.cost_memory :
-                    0}}</span>
-                <span class="text-emerald-700">Reserve Cost: {{currentCard.cost_reserve ? currentCard.cost_reserve :
-                    0}}</span>
-                <span class="text-emerald-700">Level: {{currentCard.level ? currentCard.level : 'None'}}</span>
-                <span class="text-emerald-700">Life: {{currentCard.life ? currentCard.life : 'None'}}</span>
-                <span class="text-emerald-700">Power: {{currentCard.power ? currentCard.power : 'None'}}</span>
-                <span class="text-emerald-700">Speed: {{currentCard.speed === null ? 'None' : currentCard.speed ==
-                    true ?
-                    'Fast' : 'Slow'}}</span>
-            </div>
-            <div
-                class="flex flex-col mt-2 bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
-                <span class="text-emerald-700">Effect:</span>
-                <div class="text-emerald-700 p-2 border border-solid border-emerald-500"
-                    [innerHtml]="currentCard.effect_raw">
+<div class="h-screen">
+    <mat-drawer-container hasBackdrop class="h-screen">
+        <mat-drawer #drawer mode="over" position="end" class="bg-[url('./assets/vines.png')] bg-no-repeat">
+            <!-- Card View Drawer -->
+            <div *ngIf="currentCard && loaded" class="mt-2 p-2 flex flex-col items-center w-full">
+                <div
+                    class="flex flex-col bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+                    <span class="font-bold text-lg text-emerald-700">{{currentCard.name}}</span>
+                    <span class="text-emerald-700 mt-2 mb-2">Element: {{currentCard.element}}</span>
+                </div>
+                <img [src]="getCardURL(currentCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
+                <div
+                    class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+                    <span class="text-emerald-700">Memory Cost: {{currentCard.cost_memory ? currentCard.cost_memory :
+                        0}}</span>
+                    <span class="text-emerald-700">Reserve Cost: {{currentCard.cost_reserve ? currentCard.cost_reserve :
+                        0}}</span>
+                    <span class="text-emerald-700">Level: {{currentCard.level ? currentCard.level : 'None'}}</span>
+                    <span class="text-emerald-700">Life: {{currentCard.life ? currentCard.life : 'None'}}</span>
+                    <span class="text-emerald-700">Power: {{currentCard.power ? currentCard.power : 'None'}}</span>
+                    <span class="text-emerald-700">Speed: {{currentCard.speed === null ? 'None' : currentCard.speed ==
+                        true ?
+                        'Fast' : 'Slow'}}</span>
+                </div>
+                <div
+                    class="flex flex-col mt-2 bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
+                    <span class="text-emerald-700">Effect:</span>
+                    <div class="text-emerald-700 p-2 border border-solid border-emerald-500"
+                        [innerHtml]="currentCard.effect_raw">
+                    </div>
+                </div>
+                <div
+                    class="mt-2 flex flex-row bg-slate-100 rounded-md p-2 w-full justify-center border-2 shadow-md border-solid border-emerald-500">
+                    <span class="text-emerald-700 mr-2">Card Types: </span>
+                    <div *ngFor="let type of currentCard.types">
+                        <span class="text-emerald-700" *ngIf="type">{{type}}&nbsp;&nbsp;</span>
+                    </div>
                 </div>
             </div>
-            <div
-                class="mt-2 flex flex-row bg-slate-100 rounded-md p-2 w-full justify-center border-2 shadow-md border-solid border-emerald-500">
-                <span class="text-emerald-700 mr-2">Card Types: </span>
-                <div *ngFor="let type of currentCard.types">
-                    <span class="text-emerald-700" *ngIf="type">{{type}}&nbsp;&nbsp;</span>
-                </div>
-            </div>
-        </div>
-    </mat-drawer>
-    <mat-drawer-content>
-        <div class="relative overflow-x-hidden overflow-y-hidden">
-            <img class="max-h-screen min-h-screen w-full" src="../../../../assets/play-area.png">
-            <div class="absolute top-0 left-0 mt-4 left-2">
-                <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
-                    <mat-icon class="text-ga-blue">menu</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button (click)="surrender()" mat-menu-item>
-                        <mat-icon class="!text-red-500">flag</mat-icon>
-                        <span class="text-red-500">Surrender</span>
+        </mat-drawer>
+        <mat-drawer-content class="h-full w-full bg-slate-200">
+            <div class="overflow-x-hidden overflow-y-hidden h-full">
+                <!-- Menu Button -->
+                <div class="top-4 left-0">
+                    <button class="nav-button" mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon class="text-ga-blue">menu</mat-icon>
                     </button>
-                </mat-menu>
-            </div>
-            <div class="w-1/6 rounded-full h-4 bg-gray-700 absolute top-[175px] -left-4 -rotate-90">
-                <div class="shadow-sm shadow-sky-200 bg-gradient-to-b from-sky-400 to-sky-700 h-4 rounded-full text-center leading-tight text-white"
-                    style="width: 100%">{{enemyLife}}</div>
-            </div>
-            <div class="w-1/6 rounded-full h-4  bg-gray-700 absolute bottom-[200px] -right-8 -rotate-90">
-                <div class="shadow-sm shadow-sky-200 bg-gradient-to-b from-sky-400 to-sky-700 h-4 rounded-full text-center leading-tight text-white"
-                    style="width: 100%">{{playerLife}}</div>
-            </div>
-            <app-main-deck class="absolute xl:bottom-[185px] right-[-76px] bottom-[185px]"></app-main-deck>
-            <img id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg"
-                class="h-[18%] border-4 border-transparent hover:border-ga-blue rounded-md absolute xl:left-[235px] xl:bottom-[185px] left-[237px] bottom-[185px]">
-            <div *ngIf="isViewingMatDeck">
-                <div id="matView"
-                    class="border border-8 px-4 border-solid border-ga-blue w-3/4 h-3/4 bg-slate-200 rounded-md flex flex-col absolute justify-center items-center top-20 left-[10%] grid grid-cols-6 grid-rows-2 gap-8">
-                    <div *ngFor="let card of selectedDeck.material">
-                        <img (mouseenter)="setCurrentCard(card)" id="matView" [src]="getCardURL(card.image)" draggable="false"
-                            class="border-4 border-transparent hover:border-ga-blue mt-2 rounded-md shadow-xl">
-                    </div>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="surrender()" mat-menu-item>
+                            <mat-icon class="!text-red-500">flag</mat-icon>
+                            <span class="text-red-500">Surrender</span>
+                        </button>
+                    </mat-menu>
                 </div>
-            </div>
-            <div class="flex justify-center">
-                <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
-                    (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : '-bottom-1/4'"
-                    class="fixed overflow-hidden flex flex-row w-[85%] "></app-hand>
-            </div>
-        </div>
-        <button *ngIf="!console.opened" (click)="toggleConsole()" class="bottom-4 left-6 absolute">
-            <mat-icon class="text-ga-blue">chat</mat-icon>
-        </button>
-    </mat-drawer-content>
-    <mat-drawer #console mode="over" position="start" id="console">
-        <div class="flex flex-col items-center w-full h-4/5 overflow-x-hidden overflow-y-auto">
-            <div *ngFor="let message of consoleMessages" class="w-full mt-2" tabindex="1" #chatDiv>
-                <div class="flex flex-col text-center w-full" [ngClass]="message.isEnemy ? 'items-end' : 'items-start'">
-                    <div *ngIf="message.isImage" [ngClass]="message.isEnemy ? 'mr-4 border-red-400' : 'ml-4 border-ga-blue'" class="border-2 border-solid mt-2 flex flex-col items-center bg-white font-bold rounded-md p-2 w-1/4">
-                        <img class="w-24 h-24" src="{{message.message}}">
-                    </div>
-                    <div *ngIf="!message.isImage" [ngClass]="message.isEnemy ? 'mr-4' : 'ml-4'" class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
-                        <span [ngClass]="message.isEnemy ? 'text-red-400' : 'text-ga-blue'">{{message.message}}</span>
+                <!-- Player Play Field -->
+                <div class="flex justify-center">
+                    <div
+                        class="bg-zinc-900 rounded-md bottom-4 fixed w-[90%] h-[47.5%] flex flex-col shadow-lg shadow-blue-500/50">
+                        <div class="w-full h-full flex justify-center">
+                            <img class="w-1/2 h-1/2 rotate-180 justify-center mt-[1%]" src="./assets/sparkle.png">
                         </div>
+                        <!-- Player HP -->
+                        <div class="absolute left-[3%] top-[10%]">
+                            <div class="relative size-[35%]">
+                                <svg class="size-full -rotate-90" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle -->
+                                    <circle cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="2">
+                                    </circle>
+                                    <!-- Progress Circle -->
+                                    <circle cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-blue-600 dark:text-blue-500" stroke-width="2"
+                                        stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                                </svg>
+                                <!-- Percentage Text -->
+                                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                                    <span
+                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-blue-500 via-blue-500 to-blue-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">P1</span>
+                                    <span
+                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-blue-300 via-blue-500 to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">P1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
+                            <!-- Material Deck -->
+                            <img id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg"
+                                class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">MATERIAL DECK</span>
+                            </div>
+                        </div>
+                        <div
+                            class="border-2 border-b-0 top-[55%] absolute border-solid border-white self-center h-10 w-[65%]">
+                            <div class="w-full flex justify-center">
+                                <span class="text-white  font-bold px-2">MEMORY</span>
+                            </div>
+                        </div>
+                        <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
+                            <img src="../../../assets/card-back.jpg"
+                                class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">MAIN DECK</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Enemy Play Field -->
+                <div class="flex justify-center">
+                    <div
+                        class="rotate-180 bg-zinc-900 rounded-md top-4 fixed w-[90%] h-[47.5%] flex flex-col shadow-lg shadow-rose-500/50">
+                        <div class="w-full h-full flex justify-center rotate-180">
+                            <img class="w-1/2 h-1/2 justify-center fixed bottom-4" src="./assets/sparkle.png">
+                        </div>
+                        <!-- Enemy HP -->
+                        <div class="absolute left-[3%] top-[10%]">
+                            <div class="relative size-[35%]">
+                                <svg class="size-full -rotate-90" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle -->
+                                    <circle cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-gray-200 dark:text-neutral-700" stroke-width="2">
+                                    </circle>
+                                    <!-- Progress Circle -->
+                                    <circle cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-rose-600 dark:text-rose-500" stroke-width="2"
+                                        stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                                </svg>
+                                <!-- Percentage Text -->
+                                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                                    <span
+                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-rose-500 via-rose-500 to-rose-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">P2</span>
+                                    <span
+                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-rose-300 via-rose-500 to-rose-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">P2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
+                            <!-- Material Deck -->
+                            <img src="../../../assets/card-back.jpg" class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">MATERIAL DECK</span>
+                            </div>
+                        </div>
+                        <div
+                            class="border-2 border-b-0 top-[55%] absolute border-solid border-white self-center h-10 w-[65%]">
+                            <div class="w-full flex justify-center">
+                                <span class="text-white font-bold px-2">MEMORY</span>
+                            </div>
+                        </div>
+                        <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
+                            <img src="../../../assets/card-back.jpg"
+                                class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">MAIN DECK</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="isViewingMatDeck">
+                    <div id="matView"
+                        class="border border-8 px-4 border-solid border-ga-blue w-3/4 h-3/4 bg-slate-200 rounded-md flex flex-col absolute justify-center items-center top-20 left-[10%] grid grid-cols-6 grid-rows-2 gap-8">
+                        <div *ngFor="let card of selectedDeck.material">
+                            <img (mouseenter)="setCurrentCard(card)" id="matView" [src]="getCardURL(card.image)"
+                                draggable="false"
+                                class="border-4 border-transparent hover:border-ga-blue mt-2 rounded-md shadow-xl">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
+                        (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : '-bottom-[30%]'"
+                        class="fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
                 </div>
             </div>
-        </div>
-        <div class="bottom-0 absolute rounded-md bg-white w-full">
-            <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
-                <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!', false)"
-                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it
-                    On!</button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('Nice Play.', false)"
-                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Nice
-                    Play.</button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('Good Game.', false)"
-                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Good
-                    Game.</button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('Oops!', false)"
-                    class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Oops!</button>
+            <button *ngIf="!console.opened" (click)="toggleConsole()" class="absolute bottom-4 left-6">
+                <mat-icon class="text-ga-blue">chat</mat-icon>
+            </button>
+        </mat-drawer-content>
+        <mat-drawer #console mode="over" position="start" id="console">
+            <div class="flex flex-col items-center w-full h-4/5 md:h-3/4 overflow-x-hidden overflow-y-auto">
+                <div *ngFor="let message of consoleMessages" class="w-full mt-2" tabindex="1" #chatDiv>
+                    <div class="flex flex-col text-center w-full"
+                        [ngClass]="message.isEnemy ? 'items-end' : 'items-start'">
+                        <div *ngIf="message.isImage"
+                            [ngClass]="message.isEnemy ? 'mr-4 border-red-400' : 'ml-4 border-ga-blue'"
+                            class="border-2 border-solid mt-2 flex flex-col items-center bg-white font-bold rounded-md p-2 w-1/4">
+                            <img class="w-24 h-24" src="{{message.message}}">
+                        </div>
+                        <div *ngIf="!message.isImage" [ngClass]="message.isEnemy ? 'mr-4' : 'ml-4'"
+                            class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
+                            <span
+                                [ngClass]="message.isEnemy ? 'text-red-400' : 'text-ga-blue'">{{message.message}}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Emoji Chat -->
-            <div *ngIf="emojiChat" class="grid grid-cols-4 grid-rows-4 gap-8 mb-4 p-2">
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/dc.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/dc.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/diari.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/diari.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/geni.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/geni.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/kmgj.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/kmgj.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/lor.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/lor.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/mertri.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/mertri.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/nico.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/nico.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/pol.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/pol.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/rai.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/rai.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/sil.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/sil.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/tony.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/tony.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/vani.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/vani.png">
-                </button>
-                <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/zan.png', true)"
-                    class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
-                    <img class="cover w-full h-full" src="./assets/emoji/zan.png">
-                </button>
+            <div class="bottom-0 absolute rounded-md bg-white w-full">
+                <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Bring it on!', false)"
+                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Bring it
+                        On!</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Nice Play.', false)"
+                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Nice
+                        Play.</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Good Game.', false)"
+                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Good
+                        Game.</button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('Oops!', false)"
+                        class="disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">Oops!</button>
+                </div>
+                <!-- Emoji Chat -->
+                <div *ngIf="emojiChat" class="grid grid-cols-4 grid-rows-4 gap-8 mb-4 p-2">
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/dc.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/dc.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/diari.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/diari.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/geni.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/geni.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/kmgj.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/kmgj.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/lor.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/lor.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/mertri.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/mertri.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/nico.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/nico.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/pol.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/pol.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/rai.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/rai.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/sil.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/sil.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/tony.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/tony.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/vani.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/vani.png">
+                    </button>
+                    <button [disabled]="!canSendMessage" (click)="pushMessage('./assets/emoji/zan.png', true)"
+                        class="w-24 h-24 disabled:bg-gray-400 bg-ga-blue text-white p-1 rounded-md z-40 opacity-100">
+                        <img class="cover w-full h-full" src="./assets/emoji/zan.png">
+                    </button>
+                </div>
+                <div class="mt-2 grid grid-cols-2 grid-rows-1 flex items-center">
+                    <button class="rounded-md bg-slate-200 p-2 mr-1 ml-2" (click)="emojiChat = false"><mat-icon
+                            class="text-ga-blue">chat_bubble</mat-icon></button>
+                    <button class="rounded-md bg-slate-200 p-2 ml-1 mr-2" (click)="emojiChat = true"><mat-icon
+                            class="text-ga-blue">mood</mat-icon></button>
+                </div>
             </div>
-            <div class="mt-2 grid grid-cols-2 grid-rows-1 flex items-center">
-                <button class="rounded-md bg-slate-200 p-2 mr-1 ml-2" (click)="emojiChat = false"><mat-icon
-                        class="text-ga-blue">chat_bubble</mat-icon></button>
-                <button class="rounded-md bg-slate-200 p-2 ml-1 mr-2" (click)="emojiChat = true"><mat-icon
-                        class="text-ga-blue">mood</mat-icon></button>
-            </div>
-        </div>
-    </mat-drawer>
-</mat-drawer-container>
+        </mat-drawer>
+    </mat-drawer-container>
+</div>

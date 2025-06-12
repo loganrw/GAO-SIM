@@ -22,6 +22,10 @@
 
 #console {
     background-color: rgba(44, 44, 44, 0.5);
+
+    @media (width >=48rem) {
+        max-width: 33%;
+    }
 }
 
 ::-webkit-scrollbar {
