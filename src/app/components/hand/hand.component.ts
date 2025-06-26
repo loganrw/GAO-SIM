@@ -9,6 +9,7 @@ import { Card } from '../../models/card';
 export class HandComponent {
   @Input() cards: Card[];
   @Output() currentCard = new EventEmitter<Card>();
+  @Output() cardClicked = new EventEmitter<Card>();
 
   removeCard(selectedCard: Card) {
     this.cards = this.cards.filter(card => card !== selectedCard);
@@ -16,6 +17,10 @@ export class HandComponent {
 
   returnCurrentCard(card: Card) {
     this.currentCard.emit(card);
+  }
+
+  returnClickedCard(card: Card) {
+    this.cardClicked.emit(card);
   }
 
   getCardURL(blob: Blob) {

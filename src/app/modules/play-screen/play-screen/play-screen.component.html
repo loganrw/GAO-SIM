@@ -8,7 +8,8 @@
                     <span class="font-bold text-lg text-emerald-700">{{currentCard.name}}</span>
                     <span class="text-emerald-700 mt-2 mb-2">Element: {{currentCard.element}}</span>
                 </div>
-                <img  draggable="false" [src]="getCardURL(currentCard.image)" class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
+                <img draggable="false" [src]="getCardURL(currentCard.image)"
+                    class="mt-2 w-3/4 h-3/4 rounded-md shadow-xl">
                 <div
                     class="grid grid-cols-2 grid-rows-2 gap-2 mt-4 place-items-center bg-slate-100 rounded-md p-2 w-full border-2 shadow-md border-solid border-emerald-500">
                     <span class="text-emerald-700">Memory Cost: {{currentCard.cost_memory ? currentCard.cost_memory :
@@ -52,12 +53,24 @@
                         </button>
                     </mat-menu>
                 </div>
+                <!-- Current Phase -->
+                <div *ngIf="showTurn" class="absolute top-[46%] flex justify-center left-[48%] z-40">
+                    <span
+                        [ngClass]="(isP1 && isP1Turn) || (isP2 && isP2Turn) ? 'bg-gradient-to-r from-sky-500 via-sky-500 to-sky-500' : 'bg-gradient-to-r from-rose-500 via-rose-500 to-rose-500'"
+                        class="animate-ping absolute text-4xl mx-auto py-4 flex border w-fit bg-clip-text text-3xl blur-xl box-content font-extrabold text-transparent text-center select-none">{{turnPhase[currentPhase]}}
+                        Phase</span>
+                    <span
+                        [ngClass]="(isP1 && isP1Turn) || (isP2 && isP2Turn) ? 'bg-gradient-to-r from-sky-700 via-sky-500 to-sky-700' : 'bg-gradient-to-r from-rose-500 via-rose-500 to-rose-500'"
+                        class="animate-ping relative text-4xl top-0 w-fit h-auto py-4 justify-center flex items-center bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">{{turnPhase[currentPhase]}}
+                        Phase</span>
+                </div>
                 <!-- Player Play Field -->
                 <div class="flex justify-center">
                     <div
                         class="bg-zinc-900 rounded-md bottom-4 fixed w-[90%] h-[45%] 2xl:h-[47.5%] flex flex-col shadow-lg shadow-blue-500/50">
                         <div class="w-full h-full flex justify-center">
-                            <img  draggable="false" class="w-1/2 h-1/2 rotate-180 justify-center mt-[1%]" src="./assets/sparkle.png">
+                            <img draggable="false" class="w-1/2 h-1/2 rotate-180 justify-center mt-[1%]"
+                                src="./assets/sparkle.png">
                         </div>
                         <!-- Player HP -->
                         <div class="absolute left-[3%] top-[5%] 2xl:top-[10%]">
@@ -71,20 +84,24 @@
                                     <!-- Progress Circle -->
                                     <circle cx="18" cy="18" r="16" fill="none"
                                         class="stroke-current text-blue-600 dark:text-blue-500" stroke-width="2"
-                                        stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                                        stroke-dasharray="100" (stroke-dashoffset)="calcLife(p1MaxLife, p1Life)"
+                                        stroke-linecap="round"></circle>
                                 </svg>
                                 <!-- Percentage Text -->
                                 <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
                                     <span
-                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-blue-500 via-blue-500 to-blue-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">P1</span>
+                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-blue-500 via-blue-500 to-blue-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">{{isP1
+                                        ? p1Life : p2Life}}</span>
                                     <span
-                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-blue-300 via-blue-500 to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">P1</span>
+                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-blue-300 via-blue-500 to-blue-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">{{isP1
+                                        ? p1Life : p2Life}}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
                             <!-- Material Deck -->
-                            <img draggable="false" id="matDeck" (click)="viewMaterialDeck()" src="../../../assets/card-back.jpg"
+                            <img draggable="false" id="matDeck" (click)="viewMaterialDeck()"
+                                src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MATERIAL DECK</span>
@@ -96,6 +113,13 @@
                                 <span class="text-white  font-bold px-2">MEMORY</span>
                             </div>
                         </div>
+                        <div class="border-2 rotate-90 absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
+                            <!-- <img draggable="false" src="../../../assets/card-back.jpg"
+                                class="bottom-[0.5] absolute w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md"> -->
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">BANISHED</span>
+                            </div>
+                        </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
                             <img draggable="false" src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-ga-blue rounded-md">
@@ -104,13 +128,28 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Player Cards-->
+                    <div class="flex flex-row top-[55%] absolute self-center h-[20%] w-[65%]">
+                        <div *ngFor="let card of playerPlayField" class="px-4 py-2 ml-4">
+                            <img draggable="false" (mouseenter)="setCurrentCard(card)"
+                                class="w-full h-full gap-8 border-4 border-transparent hover:border-ga-blue rounded-md"
+                                [src]="getCardURL(card.image)">
+                        </div>
+                    </div>
+                    <!-- Turn Button -->
+                    <div (click)="currentRoom.send('advance-phase')" [ngClass]="(isP1 && isP1Turn) || (isP2 && isP2Turn) ? 'hover:border-blue-500 border-blue-600 shadow-blue-500 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-600' : 'hover:border-gray-500 border-gray-600 shadow-gray-500 bg-gradient-to-r from-gray-500 via-gray-500 to-gray-600' "
+                        class="w-20 h-20 hover:cursor-pointer  top-[55%] absolute right-1 border border-4  shadow-md  rounded-full flex justify-center items-center p-4">
+                        <span *ngIf="(isP1 && isP1Turn) || (isP2 && isP2Turn)" class="text-white font-semibold">{{currentPhase === 4 ? 'PASS' : 'NEXT'}}</span>
+                        <span *ngIf="(isP1 && !isP1Turn) || (isP2 && !isP2Turn)" class="text-white text-center font-semibold">Enemy Turn</span>
+                    </div>
                 </div>
                 <!-- Enemy Play Field -->
                 <div class="flex justify-center">
                     <div
                         class="rotate-180 bg-zinc-900 rounded-md top-4 fixed w-[90%] h-[45%] 2xl:h-[47.5%] flex flex-col shadow-lg shadow-rose-500/50">
                         <div class="w-full h-full flex justify-center rotate-180">
-                            <img draggable="false" class="w-1/2 h-1/2 justify-center fixed bottom-4" src="./assets/sparkle.png">
+                            <img draggable="false" class="w-1/2 h-1/2 justify-center fixed bottom-4"
+                                src="./assets/sparkle.png">
                         </div>
                         <!-- Enemy HP -->
                         <div class="absolute left-[3%] top-[5%] 2xl:top-[10%]">
@@ -124,20 +163,24 @@
                                     <!-- Progress Circle -->
                                     <circle cx="18" cy="18" r="16" fill="none"
                                         class="stroke-current text-rose-600 dark:text-rose-500" stroke-width="2"
-                                        stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                                        stroke-dasharray="100" (stroke-dashoffset)="calcLife(p2MaxLife, p2Life)"
+                                        stroke-linecap="round"></circle>
                                 </svg>
                                 <!-- Percentage Text -->
                                 <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
                                     <span
-                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-rose-500 via-rose-500 to-rose-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">P2</span>
+                                        class="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-rose-500 via-rose-500 to-rose-500 bg-clip-text text-3xl box-content font-extrabold text-transparent text-center select-none">{{isP1
+                                        ? p1Life : p2Life}}</span>
                                     <span
-                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-rose-300 via-rose-500 to-rose-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">P2</span>
+                                        class="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-rose-300 via-rose-500 to-rose-700 bg-clip-text text-2xl font-extrabold text-transparent text-center select-auto">{{isP1
+                                        ? p1Life : p2Life}}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] left-[2%] h-[40%]">
                             <!-- Material Deck -->
-                            <img draggable="false" src="../../../assets/card-back.jpg" class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
+                            <img draggable="false" src="../../../assets/card-back.jpg"
+                                class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MATERIAL DECK</span>
                             </div>
@@ -148,12 +191,27 @@
                                 <span class="text-white font-bold px-2">MEMORY</span>
                             </div>
                         </div>
+                        <div class="border-2 rotate-90 absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
+                            <!-- <img draggable="false" src="../../../assets/card-back.jpg"
+                                class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md"> -->
+                            <div class="w-full flex justify-center mt-2">
+                                <span class="text-white font-bold text-center">BANISHED</span>
+                            </div>
+                        </div>
                         <div class="border-2 top-[40%] absolute border-solid border-white w-[8%] right-[2%] h-[40%]">
                             <img draggable="false" src="../../../assets/card-back.jpg"
                                 class="-bottom-1 w-full h-full border-4 border-transparent hover:border-rose-500 rounded-md">
                             <div class="w-full flex justify-center mt-2">
                                 <span class="text-white font-bold text-center">MAIN DECK</span>
                             </div>
+                        </div>
+                    </div>
+                    <!-- ENEMY CARDS -->
+                    <div class="flex flex-row top-[25%] absolute self-center h-[20%] w-[65%]">
+                        <div *ngFor="let card of enemyPlayField" class="px-4 py-2 ml-4">
+                            <img *ngIf="card" draggable="false" (mouseenter)="setCurrentCard(card)"
+                                class="w-full h-full gap-8 border-4 border-transparent hover:border-ga-blue rounded-md"
+                                [src]="getCardURL(card.image)">
                         </div>
                     </div>
                 </div>
@@ -169,8 +227,9 @@
                 </div>
                 <div class="flex justify-center">
                     <app-hand (mouseenter)="hoverCards = true" (mouseleave)="hoverCards = false" [cards]="hand"
-                        (currentCard)="setCurrentCard($event)" [ngClass]="hoverCards ? 'bottom-0' : '-bottom-[30%]'"
-                        class="fixed overflow-hidden flex flex-row w-[85%]"></app-hand>
+                        (currentCard)="setCurrentCard($event)" (cardClicked)="cardClicked($event)"
+                        [ngClass]="hoverCards ? 'bottom-0' : '-bottom-[30%]'"
+                        class="fixed flex flex-row justify-center min-h-[35%] max-h-[35%] min-w-[85%] max-w-[85%]"></app-hand>
                 </div>
             </div>
             <button *ngIf="!console.opened" (click)="toggleConsole()" class="absolute bottom-4 left-6">
@@ -179,21 +238,39 @@
         </mat-drawer-content>
         <mat-drawer #console mode="over" position="start" id="console">
             <div class="flex flex-col items-center w-full h-4/5 md:h-3/4 overflow-x-hidden overflow-y-auto">
-                <div *ngFor="let message of consoleMessages" class="w-full mt-2" tabindex="1" #chatDiv>
-                    <div class="flex flex-col text-center w-full"
-                        [ngClass]="message.isEnemy ? 'items-end' : 'items-start'">
-                        <div *ngIf="message.isImage"
-                            [ngClass]="message.isEnemy ? 'mr-4 border-red-400' : 'ml-4 border-ga-blue'"
-                            class="border-2 border-solid mt-2 flex flex-col items-center bg-white font-bold rounded-md p-2 w-1/4">
-                            <img draggable="false" class="w-24 h-24" src="{{message.message}}">
-                        </div>
-                        <div *ngIf="!message.isImage" [ngClass]="message.isEnemy ? 'mr-4' : 'ml-4'"
-                            class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
-                            <span
-                                [ngClass]="message.isEnemy ? 'text-red-400' : 'text-ga-blue'">{{message.message}}</span>
+                <div class="flex flex-row w-full mt-2">
+                    <button (click)="consoleChat = true" class="bg-ga-blue rounded-md px-4 py-2 w-1/2 text-white ml-2 mr-2">CHAT</button>
+                    <button (click)="consoleChat = false" class="bg-ga-blue rounded-md px-4 py-2 w-1/2 text-white ml-2 mr-2">COMBAT LOG</button>
+                </div>
+                <div *ngIf="consoleChat; else combatChat" class="w-full mt-2">
+                    <div *ngFor="let message of consoleMessages" tabindex="1" #chatDiv>
+                        <div class="flex flex-col text-center w-full"
+                            [ngClass]="message.isP2 ? 'items-end' : 'items-start'">
+                            <div *ngIf="message.isImage"
+                                [ngClass]="message.isP2 ? 'mr-4 border-red-400' : 'ml-4 border-ga-blue'"
+                                class="border-2 border-solid mt-2 flex flex-col items-center bg-white font-bold rounded-md p-2 w-1/4">
+                                <img draggable="false" class="w-24 h-24" src="{{message.message}}">
+                            </div>
+                            <div *ngIf="!message.isImage" [ngClass]="message.isP2 ? 'mr-4' : 'ml-4'"
+                                class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
+                                <span
+                                    [ngClass]="message.isP2 ? 'text-red-400' : 'text-ga-blue'">{{message.message}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <ng-template #combatChat>
+                    <div *ngFor="let message of combatMessages" class="w-full mt-2" tabindex="1" #chatDiv>
+                        <div class="flex flex-col text-center w-full"
+                            [ngClass]="message.isP2 ? 'items-end' : 'items-start'">
+                            <div [ngClass]="message.isP2 ? 'mr-4' : 'ml-4'"
+                                class="mt-2 bg-white font-bold rounded-md p-2 w-3/4">
+                                <span
+                                    [ngClass]="message.isP2 ? 'text-red-400' : 'text-ga-blue'">{{message.message}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
             </div>
             <div class="bottom-0 absolute rounded-md bg-white w-full">
                 <div *ngIf="!emojiChat" class="grid grid-cols-2 grid-rows-2 gap-8 mb-4 p-2">
